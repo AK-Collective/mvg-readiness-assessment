@@ -1,0 +1,1406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Reachable by link, not by search. This is a client preview pending SME
+     sign-off; remove when the instrument is signed off and launched. -->
+<meta name="robots" content="noindex, nofollow">
+<title>MVG Readiness Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1830; --navy:#16294B; --navy-mid:#24406E;
+    --gold:#C8A24A; --gold-soft:#E8D5A6;
+    /* Gold for TEXT ON LIGHT only. Bright gold measures 2.17:1 on cream, which
+       fails WCAG AA at every size. Rules, fills and gold-on-dark keep --gold. */
+    --gold-ink:#7A5B12;
+    --ice:#9FBBD4; --ice-soft:#DCE7F0;
+    --cream:#F7F3EA; --paper:#FFFFFF;
+    --muted:#5D6B80; --line:rgba(10,24,48,.14);
+    --display:"Fraunces", Georgia, serif;
+    --body:"Manrope", sans-serif;
+  }
+  *{box-sizing:border-box}
+  /* No single-word last lines in running prose. */
+  .howto li,.bandtext,.capnote,.pattern p,.fbody p,.rlead,ol.plan p,.disclose,.nextstep p,.shead p,.startbox p,.ctxhead p{text-wrap:pretty}
+  [tabindex="-1"]:focus{outline:none}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:var(--cream);
+    padding:12px 20px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+  .skip:focus{left:0}
+  .resume{background:var(--gold);color:var(--ink);border-bottom:1px solid rgba(10,24,48,.25)}
+  .resume-inner{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding-top:11px;padding-bottom:11px;font-size:13.5px;font-weight:600}
+  .resume button{font-family:var(--body);font-size:11px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;
+    padding:8px 15px;border:1.5px solid var(--ink);background:var(--ink);color:var(--cream);cursor:pointer}
+  .resume button#freshbtn{background:transparent;color:var(--ink)}
+  .resume button:hover{opacity:.85}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(10,24,48,.022) 1px,transparent 1px);background-size:3px 3px}
+  .mvg-wrap{max-width:920px;margin:0 auto;padding:0 28px}
+  .eyebrow{font-size:11px;letter-spacing:.22em;font-weight:800;text-transform:uppercase}
+  .mast{background:var(--ink);color:var(--cream);padding:56px 0 46px;border-bottom:3px solid var(--gold);position:relative;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1)}
+  /* A faint ruled field behind the masthead: institutional, not decorative. */
+  .mast:before{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
+    background:repeating-linear-gradient(90deg,transparent 0 39px,rgba(159,187,212,.07) 39px 40px)}
+  .mast > *{position:relative}
+  .mast .eyebrow{color:var(--gold)}
+  .mast h1{font-family:var(--display);font-weight:600;line-height:1.06;margin:16px 0 0;letter-spacing:-.015em;font-size:clamp(28px,4.2vw,40px);max-width:19ch}
+  .mast .sub{color:var(--ice);font-size:17px;max-width:58ch;margin:18px 0 0;line-height:1.6}
+  /* Collapsed state: the header stops competing with the questions. 364px -> ~72px. */
+  .mast.compact{padding:16px 0}
+  .mast.compact:before{opacity:.28}
+  .mast.compact .sub,.mast.compact .mastfoot{display:none}
+  .mast.compact .inner{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .mast.compact h1{font-size:17px;margin:0;max-width:none;letter-spacing:0}
+  .mast.compact .eyebrow{font-size:9.5px;opacity:.85}
+  .mastfoot{display:flex;flex-wrap:wrap;gap:10px 34px;margin-top:30px;padding-top:22px;border-top:1px solid rgba(159,187,212,.28);font-size:12.5px;color:var(--ice)}
+  .mastfoot b{color:var(--cream);font-weight:700}
+  .howto{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);padding:26px 30px;margin:38px 0 0}
+  .howto h2{font-family:var(--display);font-size:21px;font-weight:600;margin:0 0 12px}
+  .howto ol{margin:20px 0 0;padding-left:20px}.howto li{margin:0 0 10px;font-size:14.5px;color:var(--navy);padding-left:4px}
+  .howto li::marker{color:var(--gold-ink);font-weight:700}
+  .howto .note{margin:16px 0 0;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+  .howto .note b{color:var(--navy)}
+  .ctxhead{display:grid;grid-template-columns:auto 1fr auto;gap:0 16px;align-items:baseline}
+  .datestamp{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--muted);
+    white-space:nowrap;border-bottom:1px solid var(--line);padding-bottom:3px}
+  @media(max-width:560px){.ctxhead{grid-template-columns:auto 1fr}.datestamp{grid-column:2;margin-top:8px;justify-self:start}}
+  .ctxnum{grid-row:span 2;font-family:var(--display);font-size:15px;font-weight:600;color:var(--gold-ink);
+    width:30px;height:30px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;align-self:start}
+  .ctxhead h2{font-family:var(--display);font-size:21px;font-weight:600;margin:0}
+  .ctxhead p{grid-column:2/-1;margin:6px 0 0;font-size:13px;color:var(--muted);max-width:56ch}
+  .context{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--ink);padding:26px 30px;margin:38px 0 0}
+  .ctxgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:20px;margin:22px 0 0}
+  .context label{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--muted);margin-bottom:7px}
+  .context input{width:100%;font-family:var(--body);font-size:15px;color:var(--ink);background:transparent;
+    border:0;border-bottom:1.5px solid var(--line);padding:7px 2px;transition:border-color .2s ease}
+  .context input::placeholder{color:rgba(93,107,128,.45)}
+  .context input:focus{outline:none;border-bottom-color:var(--gold);border-bottom-width:2px}
+  .howto details.note{margin:18px 0 0;border-top:1px solid var(--line);padding-top:14px}
+  .howto details.note summary{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+    color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+  .howto details.note summary::-webkit-details-marker{display:none}
+  .howto details.note summary:before{content:"+";font-size:14px;color:var(--gold-ink);font-weight:700}
+  .howto details.note[open] summary:before{content:"–"}
+  .howto details.note summary:hover{color:var(--ink)}
+  .howto details.note p{margin:14px 0 0;font-size:13px;color:var(--muted);line-height:1.65}
+  .progress{position:sticky;top:0;z-index:20;background:rgba(247,243,234,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-top:44px}
+  .progress-inner{max-width:920px;margin:0 auto;padding:11px 28px 12px;display:flex;align-items:flex-end;gap:20px}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent;overflow:hidden}
+  .bar span{display:block;height:100%;width:0;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1)}
+  .pcount{font-size:15px;font-weight:800;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;
+    font-family:var(--display);line-height:1}
+  .pcount .pof{font-size:11px;color:var(--muted);font-weight:700;font-family:var(--body)}
+  main{padding-bottom:80px}
+  .section{margin-top:38px;background:var(--paper);border:1px solid var(--line)}
+  /* One orchestrated reveal per screen change. Cheap, and it makes the five
+     screens feel like turning a page rather than a form reloading. */
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .screen.active .section{animation:rise .42s cubic-bezier(.2,.7,.3,1) both}
+  .screen.active .item{animation:rise .42s cubic-bezier(.2,.7,.3,1) both}
+  .screen.active .item:nth-child(2){animation-delay:.05s}
+  .screen.active .item:nth-child(3){animation-delay:.10s}
+  .screen.active .item:nth-child(4){animation-delay:.15s}
+  .screen.active .item:nth-child(5){animation-delay:.20s}
+  .screen.active .item:nth-child(6){animation-delay:.25s}
+  .screen.active .nav{animation:rise .42s cubic-bezier(.2,.7,.3,1) .28s both}
+  .shead{padding:26px 30px 22px;border-bottom:1px solid var(--line);display:flex;gap:20px;align-items:flex-start}
+  .snum{font-family:var(--display);font-size:30px;font-weight:600;color:var(--gold-ink);line-height:1;padding-top:4px;min-width:44px}
+  .shead h3{font-family:var(--display);font-size:24px;font-weight:600;margin:0;line-height:1.18}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}.tag{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:4px 9px;border:1px solid var(--line);color:var(--muted)}
+  .tag.layer{background:var(--ink);color:var(--gold-soft);border-color:var(--ink)}.shead p{margin:12px 0 0;font-size:14px;color:var(--muted);max-width:62ch}
+  .item{padding:22px 30px;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item.answered{background:linear-gradient(90deg,rgba(200,162,74,.07),transparent 45%)}
+  .item.unscored{background:linear-gradient(90deg,rgba(93,107,128,.08),transparent 45%)}
+  .stmt{display:flex;gap:14px;margin:0 0 16px}
+  .sidx{font-size:11px;font-weight:800;color:var(--gold-ink);padding-top:5px;min-width:38px;font-variant-numeric:tabular-nums;letter-spacing:.06em}
+  .stmt p{margin:0;font-family:var(--display);font-size:18px;font-weight:600;color:var(--ink);line-height:1.35;max-width:56ch;text-wrap:pretty}
+  .choices{display:flex;flex-direction:column;gap:0;margin-left:52px;border-top:1px solid var(--line)}
+  .choice{position:relative;display:block;border-bottom:1px solid var(--line)}
+  .choice input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+  .opt{display:flex;gap:14px;align-items:flex-start;padding:13px 16px 13px 17px;font-size:14.5px;color:var(--navy);
+    cursor:pointer;line-height:1.5;position:relative;transition:background .18s ease}
+  /* A gold rule slides in from the left rather than the whole row changing colour. */
+  .opt:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);
+    transform:scaleY(0);transform-origin:center;transition:transform .22s cubic-bezier(.4,0,.2,1)}
+  .opt .dot{flex:0 0 16px;height:16px;margin-top:3px;border:1.5px solid var(--line);border-radius:50%;
+    transition:border-color .18s ease,box-shadow .18s ease,background .18s ease,transform .22s cubic-bezier(.4,0,.2,1)}
+  .opt .txt{transition:transform .22s cubic-bezier(.4,0,.2,1);text-wrap:pretty}
+  .choice:hover .opt{background:rgba(159,187,212,.10)}
+  .choice:hover .opt .dot,.choice:hover .opt .txt{transform:translateX(5px)}
+  .choice:hover .opt .dot{border-color:var(--navy-mid)}
+  .choice input:focus-visible + .opt{outline:2px solid var(--gold);outline-offset:-2px}
+  .choice input:checked + .opt{background:rgba(200,162,74,.10);color:var(--ink)}
+  .choice input:checked + .opt .dot,.choice input:checked + .opt .txt{transform:translateX(5px)}
+  .choice input:checked + .opt:before{transform:scaleY(1)}
+  .choice input:checked + .opt .dot{border-color:var(--gold);background:var(--gold);box-shadow:inset 0 0 0 3.5px var(--paper)}
+  .choices-alt{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);margin-top:-1px}
+  .choices-alt .choice{flex:1;min-width:150px;border-bottom:0}
+  .choices-alt .opt{font-size:12px;color:var(--muted);padding:10px 14px 10px 17px;letter-spacing:.02em}
+  .choices-alt .opt .dot{flex-basis:13px;height:13px;margin-top:2px}
+  .choices-alt .opt:before{background:var(--muted)}
+  .choices-alt .choice input:checked + .opt{background:rgba(93,107,128,.10);color:var(--navy)}
+  .choices-alt .choice input:checked + .opt .dot{border-color:var(--muted);background:var(--muted)}
+  .results{margin-top:64px;border:1px solid var(--line);background:var(--paper)}.results.locked{opacity:.5}
+  .rhead{background:var(--ink);color:var(--cream);padding:30px}.rhead .eyebrow{color:var(--gold)}
+  .rhead h2{font-family:var(--display);font-size:28px;font-weight:600;margin:12px 0 0}.rbody{padding:30px}
+  .lockmsg{padding:44px 30px;text-align:center;color:var(--muted);font-size:14.5px}
+  .scoreline{display:grid;grid-template-columns:auto 1fr;column-gap:20px;row-gap:14px;align-items:center;padding-bottom:24px;border-bottom:1px solid var(--line)}
+  .bignum{grid-column:1;grid-row:1;font-family:var(--display);font-size:52px;font-weight:600;line-height:.9;color:var(--ink)}
+  .bignum s{text-decoration:none;font-size:22px;color:var(--muted)}
+  .band{grid-column:2;grid-row:1;justify-self:start;align-self:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;padding:7px 13px;background:var(--ink);color:var(--gold-soft)}
+  .bandtext{grid-column:1/-1;font-size:14.5px;color:var(--muted);margin:0;max-width:66ch}
+  .capnote{grid-column:1/-1;font-size:13px;color:var(--navy);margin:0;padding:12px 16px;background:rgba(200,162,74,.12);border-left:3px solid var(--gold);max-width:66ch}
+  .pattern{margin:26px 0 0;padding:24px 26px;background:var(--ink);color:var(--cream);border-left:5px solid var(--gold)}
+  .pattern.indet{background:var(--cream);color:var(--navy);border-left-color:var(--muted)}
+  .peyebrow{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:var(--gold)}
+  .pattern.indet .peyebrow{color:var(--muted)}
+  .pattern h3{font-family:var(--display);font-size:25px;font-weight:600;margin:10px 0 0;line-height:1.15}
+  .pbits{display:flex;gap:7px;margin:14px 0 0}
+  .pbit{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:4px 10px;border:1px solid rgba(159,187,212,.45);color:var(--ice)}
+  .pbit.on{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+  .pattern p{margin:16px 0 0;font-size:14.5px;line-height:1.6;max-width:68ch;color:var(--ice)}
+  .pattern.indet p{color:var(--navy)}
+  .pattern .pnext{color:var(--cream)}.pattern .pnext b{color:var(--gold-soft)}
+  .appendix{display:none}
+  .apcomp{margin-top:18px;break-inside:avoid}
+  .apcomp h5{font-family:var(--display);font-size:15px;font-weight:600;margin:0 0 6px}
+  .rvcomp{padding:18px 30px;border-bottom:1px solid var(--line)}
+  .rvcomp:last-child{border-bottom:0}
+  .rvcomp h5{font-family:var(--display);font-size:16px;font-weight:600;margin:0 0 10px;display:flex;
+    align-items:baseline;gap:10px;flex-wrap:wrap}
+  .rvcomp h5 button{font-family:var(--body);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    font-weight:800;color:var(--muted);background:none;border:0;border-bottom:1px solid var(--line);cursor:pointer;padding:0 0 2px}
+  .rvcomp h5 button:hover{color:var(--ink);border-bottom-color:var(--gold)}
+  .rvrow{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:13px}
+  .rvrow b{color:var(--muted);font-weight:800;font-size:11px;padding-top:2px}
+  .rvrow .rvq{color:var(--muted);display:block;margin-bottom:2px}
+  .rvrow .rva{color:var(--ink);font-weight:600}
+  .rvrow.unscored .rva{color:var(--muted)}
+  .aprow{display:grid;grid-template-columns:42px 1fr 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:11px;break-inside:avoid}
+  .aprow b{color:var(--muted);font-weight:800}
+  .aprow .apq{color:var(--muted)}
+  .aprow .apa{color:var(--ink);font-weight:600}
+  .nextstep{margin-top:34px;padding:24px 26px;border:1px solid var(--line);border-top:3px solid var(--gold);background:var(--cream)}
+  .nextstep p{margin:14px 0 0;font-size:14px;color:var(--navy);max-width:66ch}
+  .nextstep .contact{font-weight:700;color:var(--ink)}
+  .rsub{font-family:var(--display);font-size:19px;font-weight:600;margin:34px 0 6px}
+  .rlead{margin:0 0 18px;font-size:13.5px;color:var(--muted);max-width:66ch}
+  .ladder{border-top:1px solid var(--line)}
+  .rung{display:grid;grid-template-columns:96px 1fr 150px;align-items:stretch;border-bottom:1px solid var(--line)}
+  .lorder{padding:16px 12px;font-size:10px;letter-spacing:.14em;font-weight:800;color:var(--muted);text-transform:uppercase;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;gap:3px}
+  .lorder b{font-family:var(--display);font-size:17px;font-weight:600;color:var(--ink);letter-spacing:0;text-transform:none}
+  .lname{padding:16px 18px;display:flex;flex-direction:column;justify-content:center}.lname strong{font-family:var(--display);font-size:17px;font-weight:600}.lname em{font-style:normal;font-size:12.5px;color:var(--muted)}
+  .lscore{border-left:1px solid var(--line);padding:16px 14px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+  .lscore .n{font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--navy)}
+  .lscore .cov{font-size:10.5px;color:var(--muted);font-weight:700}
+  .gauge{height:6px;background:var(--ice-soft)}.gauge span{display:block;height:100%;background:var(--navy-mid)}
+  .breaks{background:rgba(200,162,74,.1)}.breaks .gauge span{background:var(--gold)}.breaks .lorder{color:var(--gold-ink)}
+  .insuf{background:rgba(93,107,128,.08)}.insuf .gauge span{background:var(--muted)}
+  .fracture{display:flex;align-items:center;gap:12px;padding:9px 14px;background:var(--ink);color:var(--gold);font-size:10.5px;letter-spacing:.16em;font-weight:800;text-transform:uppercase}
+  .fracture:before{content:"";flex:0 0 26px;height:1px;background:var(--gold)}
+  .focus{margin-top:34px;border:1px solid var(--ink);border-left:5px solid var(--gold)}
+  .fhead{background:var(--ink);color:var(--cream);padding:18px 24px}.fhead .eyebrow{color:var(--gold)}
+  .fhead h5{font-family:var(--display);font-size:22px;font-weight:600;margin:8px 0 0}
+  .fbody{padding:22px 24px}.fbody p{margin:0 0 14px;font-size:14.5px;color:var(--navy);max-width:66ch}
+  .gaps{list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
+  .gaps li{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--navy);display:flex;gap:12px}
+  .gaps li b{color:var(--gold-ink);font-size:11px;letter-spacing:.1em;font-weight:800;white-space:nowrap;padding-top:3px}
+  .gapscope{font-size:11.5px;color:var(--muted);margin:16px 0 0;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .fbody p.why{font-style:italic;color:var(--muted);font-size:13.5px;border-left:2px solid var(--line);padding-left:14px}
+  ol.plan{list-style:none;counter-reset:plan;margin:0;padding:0;border-top:1px solid var(--line)}
+  ol.plan li{counter-increment:plan;padding:18px 0 18px 46px;border-bottom:1px solid var(--line);position:relative}
+  ol.plan li:before{content:counter(plan);position:absolute;left:0;top:18px;font-family:var(--display);font-size:19px;font-weight:600;color:var(--gold-ink)}
+  ol.plan .pname{font-family:var(--display);font-size:16.5px;font-weight:600;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+  ol.plan .pband{font-family:var(--body);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--muted);border:1px solid var(--line);padding:3px 8px}
+  ol.plan p{margin:8px 0 0;font-size:13.5px;color:var(--navy);max-width:66ch}
+  .flag{margin-top:22px;padding:14px 18px;background:var(--cream);border-left:3px solid var(--muted);font-size:13.5px;color:var(--navy)}
+  .flag ul{margin:10px 0 0;padding-left:18px}.flag li{margin:0 0 4px;font-size:13px}
+  .disclose{margin-top:22px;padding:14px 18px;border:1px solid var(--line);font-size:13px;color:var(--muted)}
+  .disclose b{color:var(--navy)}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+  button.act{font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:13px 22px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:all .15s ease}
+  button.act:hover{background:var(--ink);color:var(--cream)}
+  button.act.primary{background:var(--ink);color:var(--cream)}button.act.primary:hover{background:var(--navy-mid);border-color:var(--navy-mid)}
+  button.act:focus-visible{outline:2px solid var(--gold);outline-offset:3px}.toast{font-size:12.5px;color:var(--muted);align-self:center}
+  .foot{border-top:1px solid var(--line);margin-top:60px;padding:26px 0 44px;font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+  .foot a{color:var(--muted)}
+  /* ---- screen flow ---- */
+  .screen{display:none}.screen.active{display:block}
+  .steps{display:flex;gap:2px;align-items:stretch;flex:1;min-width:0;list-style:none;margin:0;padding:0}
+  .step{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;padding:2px 0;
+    border-top:3px solid var(--ice-soft);transition:border-color .3s ease,color .3s ease;color:var(--muted)}
+  .step b{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+  .step i{font-style:normal;font-size:9px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;opacity:.62;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .step.done{border-top-color:var(--gold);color:var(--navy)}
+  .step.now{border-top-color:var(--ink);color:var(--ink)}
+  .step.now i{opacity:1;color:var(--gold-ink)}
+  @media(max-width:600px){
+    .step i{display:none}
+    /* On a phone the compact title wraps to two lines and costs more than it
+       earns. The eyebrow already says what this is. */
+    .mast.compact h1{display:none}
+    .mast.compact{padding:13px 0}
+  }
+  .startbox{margin:34px 0 0;padding:34px 30px;background:var(--ink);color:var(--cream);text-align:center;
+    border-bottom:3px solid var(--gold);position:relative;overflow:hidden}
+  .startbox:before{content:"";position:absolute;inset:0;opacity:.45;pointer-events:none;
+    background:repeating-linear-gradient(90deg,transparent 0 39px,rgba(159,187,212,.07) 39px 40px)}
+  .startbox > *{position:relative}
+  .startbox .starthint{margin:16px auto 0;max-width:none;font-size:12px;color:var(--gold-soft);letter-spacing:.04em;min-height:1em;text-align:center}
+  .startbox p{margin:0 0 22px;font-size:14.5px;color:var(--ice);max-width:56ch;margin-inline:auto;line-height:1.6}
+  button.big{font-family:var(--body);font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+    padding:17px 42px;border:1.5px solid var(--gold);background:var(--gold);color:var(--ink);cursor:pointer;transition:all .18s ease}
+  button.big:hover{background:transparent;color:var(--gold)}
+  button.big:disabled{background:transparent;border-color:rgba(159,187,212,.4);color:rgba(159,187,212,.5);cursor:not-allowed}
+  button.big:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .nav{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-top:22px;padding:20px 0 0}
+  .nav .hint{font-size:12.5px;color:var(--muted);flex:1;min-width:180px;text-align:center}
+  button.ghost{font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:13px 22px;border:1.5px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+  button.ghost:hover{border-color:var(--ink);color:var(--ink)}
+  button.next{font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:13px 26px;border:1.5px solid var(--ink);background:var(--ink);color:var(--cream);cursor:pointer}
+  button.next:hover:not(:disabled){background:var(--navy-mid);border-color:var(--navy-mid)}
+  button.next:disabled{background:transparent;border-color:var(--line);color:var(--muted);cursor:not-allowed}
+  @media(max-width:760px){.choices{margin-left:0}.choices-alt .choice{min-width:100%}.stmt{gap:10px}.rung{grid-template-columns:74px 1fr}.lscore{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}.shead{flex-direction:column;gap:10px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+  @media print{
+    body{background:#fff;font-size:11pt}.progress,.actions,.howto{display:none}
+    .section,.results{break-inside:auto;border-color:#bbb}.item{break-inside:avoid}
+    .appendix{display:block;break-before:page}
+    .appendix .rlead{margin-bottom:10px}
+    /* The header is collapsed on screen by the time anyone prints. A board
+       document needs the full masthead back on page one. */
+    .mast.compact{padding:0 0 20px}
+    .mast.compact .sub,.mast.compact .mastfoot{display:block}
+    .mast.compact .inner{display:block}
+    .mast.compact h1{display:block;font-size:26px;margin:12px 0 0;max-width:22ch}
+    .mast:before,.startbox:before{display:none}
+    .mast{background:#fff;color:var(--ink);border-bottom:2px solid var(--gold);padding:0 0 20px}
+    .mast .sub,.mastfoot{color:var(--muted)}.mastfoot b{color:var(--ink)}
+    .rhead,.fhead,.fracture,.pattern{background:#fff!important;color:var(--ink)!important;border:1px solid #bbb}
+    .pattern p,.pattern .pnext{color:var(--ink)!important}
+    .pattern h3,.peyebrow,.pattern .pnext b{color:var(--ink)!important}
+    .pbit{border-color:#bbb!important;color:#555!important}.pbit.on{background:#eee!important;color:#000!important}
+    .pattern,.nextstep,.focus,.rung{break-inside:avoid}
+    .choices{break-inside:auto}.choice{break-inside:avoid}
+    .rhead h2,.fhead h5{color:var(--ink)!important}.results.locked{display:none}
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#form">Skip to the assessment</a>
+<div class="resume" id="resume" hidden>
+  <div class="mvg-wrap resume-inner">
+    <span id="resumetext"></span>
+    <button type="button" id="resumebtn">Continue where I left off</button>
+    <button type="button" id="freshbtn">Start again</button>
+  </div>
+</div>
+<p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+
+<header class="mast">
+  <div class="mvg-wrap">
+    <div class="inner">
+      <div class="eyebrow">Minimum Viable Governance for AI · Readiness Assessment</div>
+      <h1>Where does your governance floor break?</h1>
+    </div>
+    <p class="sub">Twenty-five questions across the five Phase 1 components. The result is not a grade — it is a starting point, sequenced in the order the framework actually depends on.</p>
+    <div class="mastfoot">
+      <span><b>25</b> questions</span>
+      <span><b>5</b> components</span>
+      <span><b>15–20</b> minutes</span>
+      <span><b>Strategies by Design Group</b> · Human Intelligence + Augmented Intelligence = Value, redesigned.</span>
+    </div>
+  </div>
+</header>
+
+<section class="screen active" id="screen-intro">
+<div class="mvg-wrap">
+  <section class="context" aria-label="Assessment context">
+    <div class="ctxhead"><span class="ctxnum">1</span><h2>Who is answering</h2>
+      <span class="datestamp" id="datestamp"></span>
+      <p>Printed on the result.</p></div>
+    <div class="ctxgrid">
+      <div><label for="f-inst">Institution or system</label><input id="f-inst" type="text" placeholder="Northgate Community College"></div>
+      <div><label for="f-name">Completed by</label><input id="f-name" type="text" placeholder="Name"></div>
+      <div><label for="f-role">Role</label><input id="f-role" type="text" placeholder="Provost"></div>
+    </div>
+    <input type="hidden" id="f-date">
+  </section>
+
+  <section class="howto">
+    <div class="ctxhead"><span class="ctxnum">2</span><h2>How to answer</h2></div>
+    <ol>
+      <li><b>Answer for what is actually operating</b>, not what is drafted, intended, or sitting in a folder.</li>
+      <li><b>Use <i>Don't know</i> honestly.</b> It is never scored against you.</li>
+      <li><b>Use <i>Not applicable</i> only when the question genuinely cannot apply</b> to your institution.</li>
+      <li><b>Have several people complete it separately.</b> Where informed colleagues describe the same thing differently, that disagreement is the finding.</li>
+      <li><b>Click a selected answer again to clear it.</b></li>
+    </ol>
+    <details class="note"><summary>About this instrument</summary><p>This instrument assesses readiness against the five Phase 1 components only. Use-case inventory including shadow AI, human-in-the-loop rules, and appeal rules are deliberately out of scope — they sit in Phase 2, above the floor this measures. <b>Framework note:</b> the components and their build order come from the Minimum Viable Governance framework by Strategies by Design Group. They align with the GOVERN function of the <a href="https://doi.org/10.6028/NIST.AI.100-1">NIST AI Risk Management Framework 1.0</a>; this instrument is not a NIST conformance assessment. <b>Cut points are provisional SME judgment</b> pending a formal review.</p></details>
+  </section>
+
+  <div class="startbox">
+    <p>Five sections, five questions each. Pick the description that matches your institution, not the one you would like to be true.</p>
+    <button class="big" id="startbtn" type="button" disabled>Begin the assessment</button>
+    <p class="starthint" id="starthint"></p>
+  </div>
+</div>
+</section>
+
+<aside class="progress" id="progressbar" aria-label="Assessment progress" style="display:none"><div style="position:relative">
+  <div class="progress-inner">
+    <ol class="steps" id="steps"></ol>
+    <div class="pcount"><span id="pnum">0</span><span class="pof">/25</span></div>
+    <div class="bar" aria-hidden="true"><span id="barfill"></span></div>
+  </div>
+  </div>
+</aside>
+
+<main class="mvg-wrap" id="form" aria-label="Readiness assessment questions"></main>
+
+<div class="mvg-wrap">
+  <section class="screen" id="screen-review">
+    <div class="section">
+      <div class="shead"><div class="snum">✓</div><div>
+        <h3>Review your answers</h3>
+        <p>Change anything that does not read right.</p>
+      </div></div>
+      <div id="reviewbody"></div>
+    </div>
+    <div class="nav">
+      <button class="ghost" type="button" data-go="4">Back</button>
+      <span class="hint" id="hint-review"></span>
+      <button class="next" type="button" data-go="6">See your result</button>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-results">
+    <div class="results" id="results">
+      <div class="rhead">
+        <div class="eyebrow">Result</div>
+        <h2>Your governance floor</h2>
+      </div>
+      <div class="rbody" id="rbody"></div>
+    </div>
+  </section>
+  <footer class="foot">
+    <span>Minimum Viable Governance · Phase 1 Readiness Assessment</span>
+    <span>Strategies by Design Group</span>
+  </footer>
+</div>
+
+<script>
+/* =========================================================================
+   MVG Readiness Assessment — instrument v2
+   Built against instrument-design-SOP.md. Archetype A4 (Single-Entity Gated
+   Readiness). Decisions recorded in content/instrument-decisions.md.
+
+   Scoring model: GATE-CAPPED COMPENSATORY.
+   The headline band is the LOWER of (a) the compensatory band from the mean
+   of component percentages and (b) the cap implied by the dependency ladder.
+   Both derive from the same component-result objects, so the headline can
+   never claim more than the ladder supports. Do not add any code path that
+   re-sums raw items independently — that is what produced the v1 defect
+   where "all five components are operating" printed above a fracture bar.
+   ========================================================================= */
+
+// Item ids are STABLE (spine Q8: recurring waves). Never renumber them; never
+// key an answer by array position. Appending an item is safe; reordering the
+// display is safe; changing an id silently orphans historical data.
+const SCALE = [
+  { v: 0,    key: 'not',  label: 'Not in place', mark: '0' },
+  { v: 1,    key: 'emg',  label: 'Emerging',     mark: '1' },
+  { v: 2,    key: 'est',  label: 'Established',  mark: '2' },
+  { v: 3,    key: 'opr',  label: 'Operating',    mark: '3' },
+  { v: null, key: 'dk',   label: "Don't know",   mark: '?', dk: true },
+  { v: null, key: 'na',   label: 'Not applicable', mark: '—', na: true }
+];
+
+// tier drives the ladder cap: 1 = Define (First), 2 = Bound (Second),
+// 3 = Operate (Third). Array order IS build order.
+const COMPONENTS = [
+  { id:'c01', num:'01', tier:1, layer:'Define', order:'First',
+    name:'Shared AI Fluency & Common Language',
+    blurb:'A shared definitional standard and a baseline fluency expectation by role. Everything downstream depends on people meaning the same thing by the same words.',
+    items:[
+      { id:'c01.1', stem:'How are AI terms like “agent”, “bot” and “agentic orchestration” defined across your institution?', options:[
+        'There is no shared definition. The same word means different things depending on who is speaking.',
+        'Some teams have working definitions of their own. Nothing holds institution-wide.',
+        'A shared definition exists and is published, though people use it unevenly.',
+        'A shared definition exists and shows up in how people actually write and talk about this work.' ] },
+      { id:'c01.2', stem:'What AI fluency is expected of someone as a condition of employment?', options:[
+        'Nothing is expected. Learning about AI is left entirely to individual interest.',
+        'There is an informal sense that people should keep up, but nothing is stated.',
+        'A baseline expectation is stated, though it is aimed mainly at technical or teaching roles.',
+        'A baseline expectation is stated for every employee, whatever their role.' ] },
+      { id:'c01.3', stem:'Is the AI fluency expectation set separately for different roles?', options:[
+        'No. There is no role-level expectation for anyone.',
+        'Expectations exist for one or two roles, usually technical or teaching, and not the rest.',
+        'Most roles have a stated expectation, though some groups are unclear where they fit.',
+        'Each role has a distinct, stated expectation, and people can describe their own.' ] },
+      { id:'c01.4', stem:'Where does AI fluency actually live in your institution\'s routines?', options:[
+        'Nowhere. Whatever happens is ad hoc.',
+        'In optional one-off sessions, such as a workshop or a lunch and learn.',
+        'It has been added to one existing structure, such as onboarding, but unevenly.',
+        'It is carried inside onboarding, professional development or evaluation, the way other expectations are.' ] },
+      { id:'c01.5', stem:'When were your AI definitions and fluency expectations last revisited?', options:[
+        'They have never been written, or never revisited since they were first written.',
+        'More than two years ago.',
+        'Within the last one to two years, on an ad hoc basis.',
+        'Within the last twelve months, on a set review cycle with a named owner.' ] }
+    ]},
+  { id:'c02', num:'02', tier:1, layer:'Define', order:'First',
+    name:'Ethical Guardrails',
+    blurb:'Use principles written as decision rules a manager can apply — not a values statement. Red lines are named, not implied.',
+    items:[
+      { id:'c02.1', stem:'If a supervisor has to decide about an AI use on the spot, what do they reach for?', options:[
+        'Nothing written. They use their own judgment.',
+        'A values or vision statement, which they have to interpret.',
+        'Written principles that cover common cases but need interpretation at the edges.',
+        'Decision rules they can apply directly, without interpretation.' ] },
+      { id:'c02.2', stem:'How are your red lines for AI use expressed?', options:[
+        'There are no stated red lines.',
+        'Red lines are implied by tone or by general principles, never named.',
+        'Some uses are named as prohibited, though the list is incomplete or out of date.',
+        'Specific uses are named as prohibited outright, and people can name them.' ] },
+      { id:'c02.3', stem:'How do people know whether an AI use needs disclosing, needs approval first, or neither?', options:[
+        'There is no distinction. Every use is treated the same, or the question is not addressed.',
+        'There is a general sense that some uses need more care, but no defined categories.',
+        'The categories exist, though people are often unsure which one a given use falls into.',
+        'Disclosure and prior review are separate categories, and people can tell which applies.' ] },
+      { id:'c02.4', stem:'Are student-facing AI uses held to a different standard from internal administrative ones?', options:[
+        'No distinction is drawn.',
+        'People assume student-facing uses need more care, but nothing states it.',
+        'A separate standard exists for student-facing uses, though it is applied inconsistently.',
+        'Student-facing uses are held to a stated, higher standard that is applied in practice.' ] },
+      { id:'c02.5', stem:'Where do accessibility and disparate impact enter your AI decisions?', options:[
+        'They do not come up.',
+        'They are raised when someone happens to think of it.',
+        'They are named in the guardrails, but there is no defined check.',
+        'There is an explicit check for both, applied to AI decisions as a matter of course.' ] }
+    ]},
+  { id:'c05', num:'05', tier:2, layer:'Bound', order:'Second',
+    name:'Data Classification Boundary',
+    blurb:'Which categories of institutional and student data may enter which class of AI tool. This is the line vendor review and intake both test against.',
+    items:[
+      { id:'c05.1', stem:'Which institutional and student data may enter which class of AI tool?', options:[
+        'This has not been addressed. There is no stated position.',
+        'There is general guidance about being careful, without categories or tiers.',
+        'A tiered map exists but covers only some data categories or some tool types.',
+        'A tiered map states which data may enter which class of tool, across the range.' ] },
+      { id:'c05.2', stem:'How does your AI data guidance relate to your existing data governance and FERPA practice?', options:[
+        'There is no AI data guidance to relate.',
+        'It sits entirely separately, and the two have never been compared.',
+        'It references existing practice but runs its own categories alongside it.',
+        'It uses the same tiers as existing data governance, so there is one scheme rather than two.' ] },
+      { id:'c05.3', stem:'If a staff member is unsure whether they can put something into an AI tool, what happens?', options:[
+        'They guess, or ask a colleague who is also guessing.',
+        'They can find the answer, but it means locating and reading a policy document.',
+        'Most people know the rule for common cases and look up the unusual ones.',
+        'The answer is visible where they are working, at the moment they need it.' ] },
+      { id:'c05.4', stem:'What happens when a data situation does not fit the tiers cleanly?', options:[
+        'Nothing defined. It is handled case by case, or the situation is avoided.',
+        'People escalate informally to whoever they think might know.',
+        'An exception path exists, though not everyone knows it or uses it.',
+        'There is a defined exception path, and people use it as a matter of course.' ] },
+      { id:'c05.5', stem:'Where does the data boundary appear for the people it applies to?', options:[
+        'It does not appear anywhere.',
+        'In a policy repository, if someone goes looking for it.',
+        'In a policy repository, plus periodic reminders such as email or training.',
+        'At the point of tool use, where the decision is actually being made.' ] }
+    ]},
+  { id:'c03', num:'03', tier:3, layer:'Operate', order:'Third',
+    name:'Vendor Vetting',
+    blurb:'A review instrument for AI-enabled tools and third-party integrations, distinct from general IT procurement.',
+    items:[
+      { id:'c03.1', stem:'How does an AI-enabled tool get reviewed before it is adopted?', options:[
+        'It does not, or it arrives by a route with no review at all.',
+        'Through general IT or procurement review, with no AI-specific questions.',
+        'Through general review, plus AI questions added informally by whoever is handling it.',
+        'Through a defined review instrument for AI tools, distinct from general procurement.' ] },
+      { id:'c03.2', stem:'How is it established whether a vendor uses institution or student data to train or improve their models?', options:[
+        'This is not asked.',
+        'It comes up occasionally, depending on who is reviewing.',
+        'It is asked as standard, though unclear answers are not always pursued.',
+        'Vendors are required to disclose it, and unclear answers are pursued before signing.' ] },
+      { id:'c03.3', stem:'How is a vendor\'s accessibility conformance established?', options:[
+        'It is not raised.',
+        'The vendor\'s own assertion is accepted.',
+        'Documentation is requested, and accepted as provided.',
+        'Documentation is required and verified, rather than taken at face value.' ] },
+      { id:'c03.4', stem:'How does the institution learn how a vendor\'s AI features may change after signing?', options:[
+        'No. This is not considered.',
+        'Only what the vendor volunteers during the sales conversation.',
+        'Roadmap questions are asked, though the answers are not recorded or revisited.',
+        'Vendors are required to disclose how AI features may change, and it is recorded.' ] },
+      { id:'c03.5', stem:'When a vendor\'s answers are poor, what happens?', options:[
+        'There is nothing to compare the answers against.',
+        'It is a judgment call by whoever is reviewing, case by case.',
+        'There is a stated review threshold, though which answers are disqualifying is unclear.',
+        'There is a stated threshold, and it is clear which answers disqualify rather than merely caution.' ] }
+    ]},
+  { id:'c04', num:'04', tier:3, layer:'Operate', order:'Third',
+    name:'Decision Rights & Intake',
+    blurb:'One intake path, and a map of which decisions sit at the campus and which escalate — with named sign-off at each altitude.',
+    items:[
+      { id:'c04.1', stem:'Where does someone go to propose a new AI tool or a new AI use?', options:[
+        'Nowhere defined. Requests surface wherever they happen to land.',
+        'People ask around until they find someone who can help.',
+        'There is a route most people use, though others run alongside it.',
+        'There is one known intake path, and people use it.' ] },
+      { id:'c04.2', stem:'Is it clear which AI decisions sit at the department, which at the campus, and which escalate?', options:[
+        'No. Where a decision sits is worked out each time.',
+        'There is a general sense of it, based on how things have gone before.',
+        'The levels are mapped, though the boundaries between them are contested in practice.',
+        'A decision-rights map states which decisions sit at each level.' ] },
+      { id:'c04.3', stem:'For a given AI decision, do people know whose approval is actually required?', options:[
+        'No. Approval is unclear, or simply assumed.',
+        'People usually know for their own area, and not beyond it.',
+        'Sign-off is named for most levels, with gaps at some.',
+        'Sign-off authority is named at each level, and people can say who signs.' ] },
+      { id:'c04.4', stem:'How long does a request through the intake path take to get an answer?', options:[
+        'There is no path, so the question does not arise.',
+        'It varies widely and unpredictably.',
+        'It is usually reasonable, but no expectation is published.',
+        'A response-time expectation is published, and generally met.' ] },
+      { id:'c04.5', stem:'What happens to an AI decision once it has been made?', options:[
+        'Nothing. It exists only with the people who made it.',
+        'It is recorded in the requester\'s own email or files.',
+        'It is recorded centrally, though it is hard for others to find or reuse.',
+        'It is recorded somewhere others can find and reuse it.' ] }
+    ]}
+];
+
+/* -------------------------------------------------------------------------
+   COMPONENT_ACTIONS — 5 components x 4 bands.
+   The action a reader gets depends on where THAT component sits, not on their
+   overall band. A component at 20% and one at 55% need different first moves,
+   and giving both the same advice is what made v1 read as a scorecard rather
+   than a diagnostic.
+
+   DRAFT COPY — pending Judith's sign-off (Phase B gate). The structure is
+   final; every string here is hers to rewrite.
+   ------------------------------------------------------------------------- */
+const COMPONENT_ACTIONS = {
+  c01: {
+    why: 'AI is a suitcase word. Until it means the same thing to everyone, nothing written below it can be read the same way twice.',
+    byBand: {
+      'Absent': 'Write one page. Define the four terms you actually use (AI, bot, agent, agentic orchestration) and publish it where people already look. One page is enough to start. Do not commission a glossary project.',
+      'Emerging': 'You have language in some places and not others. State a single baseline fluency expectation that applies to every employee, not only to technical or teaching roles, and put it in writing.',
+      'Established': 'The expectation exists but lands unevenly. Differentiate it by role, so an executive, a dean, an adjunct and an IT lead each know what is expected of them, then attach it to onboarding or professional development so it stops being optional.',
+      'Operating': 'Set the review interval. Definitions written more than twelve months ago describe a different technology. Put the review on a calendar with a named owner.'
+    }
+  },
+  c02: {
+    why: 'A values statement cannot be applied at the moment someone has to decide. A decision rule can.',
+    byBand: {
+      'Absent': 'Take your three most common AI requests and sort them into prohibited, permitted with disclosure, and requires review first. Those three buckets are the whole structure. Write the rule, not the principle.',
+      'Emerging': 'Principles exist but read as aspiration. Rewrite them so a supervisor can apply them without interpretation, and name at least three uses that are prohibited outright. A red line that is implied is not a red line.',
+      'Established': 'Rules exist and are applied. Separate the student-facing standard from the internal administrative one, and add an explicit accessibility and disparate impact check to both.',
+      'Operating': 'Test them against reality. Take a decision made in the last quarter and check whether the rules as written would have produced the same answer. Where they would not, the rule is wrong, not the decision.'
+    }
+  },
+  c05: {
+    why: 'This is the line vendor review and intake both test against. Without it, every downstream decision rests on one person’s judgment about data.',
+    byBand: {
+      'Absent': 'Start from the data governance you already have. Add one column to your existing classification stating which class of AI tool each tier may enter. Do not build a parallel scheme.',
+      'Emerging': 'A map exists but sits beside FERPA practice rather than inside it. Align the tiers to your current data governance, and define the exception path for situations the tiers do not cover cleanly.',
+      'Established': 'The boundary is correct but not reachable. Move it to the point of tool use, so an employee can tell what they may enter without stopping to look up a policy.',
+      'Operating': 'Watch the exceptions. A steady flow through the exception path is the tiers telling you where they are wrong. Review the log quarterly and fold the recurring cases back into the map.'
+    }
+  },
+  c03: {
+    why: 'AI-enabled tools fail in ways general IT procurement was not built to catch, and the terms change after signature.',
+    byBand: {
+      'Absent': 'Add an AI section to the procurement path you already use. Three questions is enough to begin: is our data used for training, is there accessibility conformance documentation, and what changes after we sign.',
+      'Emerging': 'Review happens case by case. Turn it into a defined instrument distinct from general IT review, and state the threshold that triggers it so it is not a fresh judgment call each time.',
+      'Established': 'The instrument exists but its answers are advisory. Decide which answers are disqualifying, and verify accessibility conformance documentation rather than accepting the vendor’s assertion.',
+      'Operating': 'Re-review on renewal, not only at purchase. AI features change materially inside a contract term, so a tool approved two years ago was approved for a product that no longer exists.'
+    }
+  },
+  c04: {
+    why: 'One path, and a map of who decides at what altitude. Where the path is slow or unclear, people route around it.',
+    byBand: {
+      'Absent': 'Publish one intake path and one name to send requests to. A single route that exists beats a designed process that does not.',
+      'Emerging': 'A path exists but authority is unclear. Map which decisions sit at the department, which at the campus and which escalate, with a named signer at each level.',
+      'Established': 'The map is right but the path is slow. Publish a response-time expectation and meet it. An intake path people wait on is an intake path people bypass.',
+      'Operating': 'Make the decisions reusable. Record what was decided and why somewhere others can find it, so the second request like the first does not start over.'
+    }
+  }
+};
+
+// The action for a component depends on its own band. An unassessed component
+// gets neither a band nor an action: establishing what exists comes first.
+function actionFor(result) {
+  if (result.insufficient) {
+    return 'Establish what exists here before acting. Fewer than three of these questions could be answered, and a gap you cannot yet describe is not one you can close.';
+  }
+  const def = COMPONENT_ACTIONS[result.component.id];
+  return (def && def.byBand[result.band.label]) || '';
+}
+
+/* -------------------------------------------------------------------------
+   LAYER_PATTERNS — the diagnosis.
+   The three layers (Define, Bound, Operate) each hold or do not, giving eight
+   shapes. The band says how far along an institution is; the pattern says what
+   KIND of incomplete it is. A procurement-led institution at 45% and a
+   stated-not-built one at 45% score identically and need opposite advice.
+
+   Keyed by a three-bit signature in build order: Define, Bound, Operate.
+
+   DRAFT COPY — pending Judith's sign-off, like COMPONENT_ACTIONS. Frequency
+   claims were deliberately NOT shipped: they were inferred rather than
+   observed, and stating guessed frequencies confidently is exactly the failure
+   this instrument exists to catch.
+   ------------------------------------------------------------------------- */
+const LAYER_PATTERNS = {
+  '111': {
+    name: 'Floor in place',
+    looks: 'Shared language exists and is used. The data boundary is published and reachable at the point of work. Vendor review and intake both run, with named sign-off. Someone can settle a contested question by pointing at something.',
+    next: 'The risk shifts from absence to drift. Phase 1 artifacts age quietly, and a governance floor nobody revisits stops describing what the institution actually does within about a year.'
+  },
+  '110': {
+    name: 'Written and bounded, not yet running',
+    looks: 'The thinking is done. Definitions are shared, guardrails read as decision rules, the data map exists. What is missing is the machinery: no distinct AI vendor review, or no single intake path with named signers.',
+    next: 'The documents get bypassed rather than broken. Staff who cannot find a path to say yes through will find one around it, and the institution ends up with real practice its own policy does not describe.'
+  },
+  '101': {
+    name: 'Operating past the data line',
+    looks: 'Vendor review runs. Intake works. Language is shared. But there is no tiered map of which institutional or student data may enter which class of tool, so every decision the machinery makes rests on an individual’s judgment about data.',
+    next: 'This is the pattern that produces the disclosure. The machinery gives everyone confidence that decisions are being reviewed, while the one question carrying regulatory exposure is left to whoever is filling in the form. Confidence and exposure rising together is the most costly combination on this list.'
+  },
+  '100': {
+    name: 'Stated, not built',
+    looks: 'There are principles, probably a statement, possibly a task force. Below that, nothing has been constructed. No data map, no vendor instrument, no intake path.',
+    next: 'Nothing dramatic, which is the difficulty. Adoption continues informally and invisibly, and the gap between the stated position and actual practice widens quietly until something forces a comparison.'
+  },
+  '011': {
+    name: 'Running on undefined terms',
+    looks: 'The apparatus is real. Data tiers exist, vendors get reviewed, decisions have owners. What is missing sits underneath: no shared definitions, or no stated fluency expectation, so the same words mean different things to the people operating the apparatus.',
+    next: 'The machinery decides inconsistently and nobody can see why. Two similar requests get opposite answers because a term meant different things to two reviewers, and the inconsistency gets read as politics rather than as a definitional gap.'
+  },
+  '010': {
+    name: 'A boundary standing alone',
+    looks: 'A data classification map exists, and little else does. Typically it was produced by one office, for one purpose, and never connected to anything around it.',
+    next: 'The map does not get used, because there is no shared language to interpret it and no intake path that tests against it. It ages into a document people cite but do not follow.'
+  },
+  '001': {
+    name: 'Procurement-led',
+    looks: 'Tools are being reviewed and requests are being routed, and governance never caught up. There is process without foundation: the institution is making decisions about AI systematically, on the basis of nothing written down.',
+    next: 'The reviews look rigorous and cannot be defended. Ask why a tool was approved and the answer is a person’s judgment rather than a standard, which holds until the first contested decision, an accessibility complaint, or an audit. This pattern carries the widest gap between how governed an institution feels and how governed it is.'
+  },
+  '000': {
+    name: 'No floor yet',
+    looks: 'No layer holds. Individual components may score in the middle and good work may exist in pockets, but nothing is yet load-bearing.',
+    next: 'Adoption is running ahead of governance and the distance grows monthly. The specific risk is that a first incident sets the policy, under pressure and in public.'
+  }
+};
+
+const LAYER_NAMES = { 1: 'Define', 2: 'Bound', 3: 'Operate' };
+
+// A layer holds only when every component in it holds. A layer containing an
+// unassessed component is unknown, not failed, so the pattern is withheld
+// rather than guessed — the same discipline as the overall coverage floor.
+function layerSignature(results) {
+  const bits = [1, 2, 3].map(tier => {
+    const inTier = results.filter(r => r.component.tier === tier);
+    if (inTier.some(r => r.insufficient)) return null;
+    return inTier.every(r => r.holds) ? '1' : '0';
+  });
+  return bits.some(b => b === null) ? null : bits.join('');
+}
+
+function patternFor(results) {
+  const sig = layerSignature(results);
+  return sig ? Object.assign({ signature: sig }, LAYER_PATTERNS[sig]) : null;
+}
+
+// Criterion-referenced, half-open intervals. Percentages, not raw sums, so the
+// thresholds survive any change in item count. Derived from Judith's v1 cut
+// points (12/9/5 of 15 = 80/60/33%). PROVISIONAL pending a mini-Angoff.
+const COMPONENT_BANDS = [
+  { min: 80, label: 'Operating',   note: 'in place, used, and maintained' },
+  { min: 60, label: 'Established', note: 'in place but uneven in practice' },
+  { min: 33, label: 'Emerging',    note: 'informal or partly built' },
+  { min: 0,  label: 'Absent',      note: 'not yet in place' }
+];
+const HOLD = 60;              // a component is load-bearing at Established or better
+const MIN_ITEMS_SCORED = 3;   // below this a component cannot be assessed at all
+const COVERAGE_FLOOR = 2 / 3; // below this no overall band is issued
+
+// Rank order matters: the headline is min(compensatory, ladder cap) by index.
+const OVERALL_BANDS = [
+  { rank:0, band:'No floor',      min:0,
+    text:'Adoption is almost certainly running ahead of governance. Start with a single component and complete it, rather than drafting all five partially.' },
+  { rank:1, band:'Fragmented',    min:33,
+    text:'Governance exists in pieces, mostly where an individual has taken initiative. Build the foundation layer first — it is the cheapest and unblocks everything above it.' },
+  { rank:2, band:'Partial floor', min:60,
+    text:'Real governance exists, but it is uneven across the five components. Close the lowest load-bearing layer before adding anything new on top.' },
+  { rank:3, band:'Floor in place', min:80,
+    text:'All five components are operating at or near the level the framework requires. The productive next move is Phase 2 — use-case inventory including shadow AI, human-in-the-loop rules, appeal rules, and an explicit revision cadence.' }
+];
+
+// Bump whenever the SET or WORDING of scored items changes: a stored answer
+// from an older instrument is not comparable and must be discarded, not
+// restored onto questions that have moved underneath it.
+const INSTRUMENT_VERSION = 3;
+
+const answers = {};   // keyed by STABLE item id
+const form = document.getElementById('form');
+
+/* --------------------------------------------------------- persistence ----
+   Twenty-five questions is 15-20 minutes of a senior administrator's time. A
+   refresh, a closed tab or a sleeping laptop must not cost them that. Wrapped
+   in try/catch throughout: private windows and locked-down browsers throw on
+   access, and a storage failure must never break the assessment itself. */
+
+const STORAGE_KEY = 'mvg.readiness.v' + INSTRUMENT_VERSION;
+const CTX_FIELDS = ['f-inst', 'f-name', 'f-role', 'f-date'];
+let restored = false;
+
+function storageOK() {
+  try { return typeof localStorage !== 'undefined' && localStorage !== null; }
+  catch (e) { return false; }
+}
+
+function save() {
+  if (!storageOK()) return;
+  try {
+    const ctx = {};
+    CTX_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) ctx[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: INSTRUMENT_VERSION, step: step, answers: answers, ctx: ctx }));
+  } catch (e) { /* quota or private mode - never block the assessment */ }
+}
+
+function clearSaved() {
+  if (!storageOK()) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function restore() {
+  if (!storageOK()) return null;
+  let data;
+  try { data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (e) { return null; }
+  if (!data || data.v !== INSTRUMENT_VERSION || !data.answers) { clearSaved(); return null; }
+  const ids = new Set(COMPONENTS.flatMap(c => c.items.map(i => i.id)));
+  let count = 0;
+  Object.keys(data.answers).forEach(k => {
+    // Ignore anything whose item no longer exists rather than carrying an
+    // orphaned answer into a score.
+    if (!ids.has(k)) return;
+    const a = data.answers[k];
+    if (!a || (a.v === null && !a.dk && !a.na)) return;
+    answers[k] = a; count++;
+  });
+  if (data.ctx) CTX_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    // A stored value overwrites the prefilled date: the record should carry the
+    // day the assessment was started, not the day it was resumed.
+    if (el && typeof data.ctx[id] === 'string' && data.ctx[id]) el.value = data.ctx[id];
+  });
+  if (!count) { clearSaved(); return null; }
+  // Repaint the radios and the answered/unscored states for what came back.
+  Object.keys(answers).forEach(id => {
+    const a = answers[id];
+    const value = a.dk ? 'dk' : a.na ? 'na' : 's' + a.v;
+    const input = document.querySelector('input[name="' + CSS.escape(id) + '"][value="' + value + '"]');
+    if (input) input.checked = true;
+    const el = document.getElementById(id + '_item');
+    if (el) { el.classList.toggle('answered', !a.dk && !a.na); el.classList.toggle('unscored', !!(a.dk || a.na)); }
+  });
+  restored = true;
+  return { count: count, step: typeof data.step === 'number' ? data.step : 0 };
+}
+
+/* ---------------------------------------------------------------- scoring */
+
+function componentResult(component) {
+  let sum = 0, scored = 0, dk = 0, na = 0;
+  component.items.forEach(item => {
+    const a = answers[item.id];
+    if (!a) return;
+    if (a.na) { na++; return; }
+    if (a.dk) { dk++; return; }
+    sum += a.v; scored++;
+  });
+  const applicable = component.items.length - na;
+  const coverage = applicable ? scored / applicable : 0;
+
+  // A component must clear BOTH floors to be rated at all: enough items scored
+  // to say anything, and enough of its applicable items covered. Without the
+  // second, "Don't know" was a way to RAISE a score - three Operating plus two
+  // Don't know returned 100% and held, while an honest five-times-Not-in-place
+  // returned 0% and failed. Not scoring DK is not enough on its own; the band
+  // has to be gated on coverage the same way the headline is, or the instrument
+  // rewards exactly the silence it asks people to avoid.
+  const insufficient = scored < MIN_ITEMS_SCORED || coverage < COVERAGE_FLOOR;
+
+  // An unrateable component reports no percentage: it must not print a score
+  // beside "Insufficient evidence", and must not feed the compensatory mean.
+  const pct = (!insufficient && scored) ? (sum / (3 * scored)) * 100 : null;
+  const band = insufficient
+    ? { label: 'Insufficient evidence', note: 'too little could be assessed to rate this' }
+    : COMPONENT_BANDS.find(b => pct >= b.min);
+  return {
+    component, pct, scored, dk, na, applicable, insufficient, band, coverage,
+    // DK NEVER clears a gate: an unanswered prerequisite is an unmet one.
+    holds: !insufficient && pct >= HOLD
+  };
+}
+
+function scoreAll() {
+  const results = COMPONENTS.map(componentResult);
+
+  // The ladder and the cap read the SAME objects. This is the whole fix.
+  const firstBreak = results.find(r => !r.holds) || null;
+  const capRank = !firstBreak ? 3 : (firstBreak.component.tier === 1 ? 0 : firstBreak.component.tier === 2 ? 1 : 2);
+
+  const scorable = results.filter(r => r.pct !== null);
+  const totalScored = results.reduce((n, r) => n + r.scored, 0);
+  const totalApplicable = results.reduce((n, r) => n + r.applicable, 0);
+  const coverage = totalApplicable ? totalScored / totalApplicable : 0;
+  const insufficientOverall = coverage < COVERAGE_FLOOR || scorable.length < 3;
+
+  const compensatory = scorable.length
+    ? scorable.reduce((s, r) => s + r.pct, 0) / scorable.length
+    : null;
+  const compRank = compensatory === null
+    ? 0
+    : [...OVERALL_BANDS].reverse().find(b => compensatory >= b.min).rank;
+
+  const finalRank = Math.min(compRank, capRank);
+  return {
+    results, firstBreak, coverage, insufficientOverall,
+    totalScored, totalApplicable,
+    totalDk: results.reduce((n, r) => n + r.dk, 0),
+    totalNa: results.reduce((n, r) => n + r.na, 0),
+    compensatory,
+    capped: finalRank < compRank,
+    overall: OVERALL_BANDS[finalRank]
+  };
+}
+
+/* ------------------------------------------------------------------ build */
+
+COMPONENTS.forEach((component, ci) => {
+  const screen = document.createElement('section');
+  screen.className = 'screen';
+  screen.id = 'screen-' + component.id;
+
+  const section = document.createElement('section');
+  section.className = 'section';
+  section.innerHTML =
+    '<div class="shead"><div class="snum">' + (ci + 1) + '</div><div>' +
+    '<h3>' + component.name + '</h3><div class="tags">' +
+    '<span class="tag layer">Section ' + (ci + 1) + ' of ' + COMPONENTS.length + ' · ' + component.layer + '</span></div>' +
+    '<p>' + component.blurb + '</p></div></div>';
+
+  component.items.forEach(item => {
+    // The respondent picks the description that matches their institution.
+    // They never see a scale and never rate themselves; the option's INDEX is
+    // the score. Generic ladder labels ("Emerging", "Established") were doing
+    // item-specific work across 25 different kinds of claim, which is why they
+    // read as ungrammatical against a declarative stem.
+    const scored = item.options.map((text, i) =>
+      '<label class="choice">' +
+      '<input type="radio" name="' + item.id + '" value="s' + i + '" data-item="' + item.id + '">' +
+      '<span class="opt"><span class="dot"></span><span class="txt">' + text + '</span></span></label>').join('');
+    const unscored = SCALE.filter(o => o.dk || o.na).map(option =>
+      '<label class="choice unscored">' +
+      '<input type="radio" name="' + item.id + '" value="' + option.key + '" data-item="' + item.id + '">' +
+      '<span class="opt"><span class="dot"></span><span class="txt">' + option.label + '</span></span></label>').join('');
+    const el = document.createElement('div');
+    el.className = 'item';
+    el.id = item.id + '_item';
+    el.innerHTML =
+      '<div class="stmt"><div class="sidx">' + (component.items.indexOf(item) + 1) + '</div>' +
+      '<p>' + item.stem + '</p></div>' +
+      '<div class="choices" role="radiogroup" aria-label="' + item.stem.replace(/"/g, '&quot;') + '">' +
+      scored + '<div class="choices-alt">' + unscored + '</div></div>';
+    section.appendChild(el);
+  });
+
+  const nav = document.createElement('div');
+  nav.className = 'nav';
+  nav.innerHTML =
+    '<button class="ghost" type="button" data-go="' + (ci - 1) + '">' + (ci === 0 ? 'Back to start' : 'Back') + '</button>' +
+    '<span class="hint" id="hint-' + component.id + '"></span>' +
+    '<button class="next" type="button" data-go="' + (ci + 1) + '" id="next-' + component.id + '" disabled>' +
+    (ci === COMPONENTS.length - 1 ? 'Review answers' : 'Next component') + '</button>';
+
+  screen.appendChild(section);
+  screen.appendChild(nav);
+  form.appendChild(screen);
+});
+
+form.addEventListener('change', event => {
+  if (event.target.type !== 'radio') return;
+  const itemId = event.target.dataset.item;
+  const raw = event.target.value;
+  // 's<n>' = the nth description, scored by its index. Anything else is one of
+  // the two unscored options.
+  const option = raw.charAt(0) === 's' && /^s\d+$/.test(raw)
+    ? { v: Number(raw.slice(1)) }
+    : SCALE.find(o => o.key === raw);
+  answers[itemId] = { v: option.v, dk: !!option.dk, na: !!option.na };
+  const el = document.getElementById(itemId + '_item');
+  el.classList.toggle('answered', !option.dk && !option.na);
+  el.classList.toggle('unscored', !!(option.dk || option.na));
+  update();
+  save();
+});
+
+/* ------------------------------------------------------------- screen flow */
+/* -1 = intro, 0..4 = the five components, 5 = results. Every screen change
+   goes through showScreen so the progress rail, the Next gate, and scroll
+   position can never disagree with what is on screen. */
+
+const REVIEW_STEP = COMPONENTS.length;          // 5
+const RESULTS_STEP = COMPONENTS.length + 1;     // 6
+const SCREENS = ['screen-intro', ...COMPONENTS.map(c => 'screen-' + c.id), 'screen-review', 'screen-results'];
+let step = -1;
+
+function screenTitle(n) {
+  if (n < 0) return 'Introduction';
+  if (n === REVIEW_STEP) return 'Review your answers';
+  if (n === RESULTS_STEP) return 'Your governance floor';
+  const c = COMPONENTS[n];
+  return 'Component ' + c.num + ' of 5, ' + c.name;
+}
+
+function showScreen(next, fromHistory) {
+  step = Math.max(-1, Math.min(RESULTS_STEP, next));
+  SCREENS.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', i === step + 1);
+  });
+  const bar = document.getElementById('resume');
+  if (bar && step >= 0) bar.hidden = true;
+  const inProgress = step >= 0 && step < REVIEW_STEP;
+  document.getElementById('progressbar').style.display = inProgress ? '' : 'none';
+  // The full masthead is an intro device. Once questions are on screen it drops
+  // from 364px to ~72px so the reading area is the question, not the branding.
+  document.querySelector('.mast').classList.toggle('compact', step >= 0);
+  if (step === REVIEW_STEP) renderReview();
+  if (step === RESULTS_STEP) render();
+  update();
+  save();
+
+  // Browser Back is what people reach for on a multi-screen flow. Without this
+  // it leaves the app and takes every answer with it.
+  if (!fromHistory && typeof history !== 'undefined' && history.pushState) {
+    history.pushState({ step: step }, '', '#' + (step < 0 ? 'start' : step >= REVIEW_STEP ? (step === REVIEW_STEP ? 'review' : 'result') : COMPONENTS[step].id));
+  }
+  // A screen reader gets no signal from a class toggle. Say what changed.
+  const ann = document.getElementById('announce');
+  if (ann) ann.textContent = screenTitle(step) + '. ' + Object.keys(answers).length + ' of 25 answered.';
+
+  // Clicking Next hides the button that had focus, dropping focus to <body>.
+  // A keyboard user then has to tab from the top of the document through the
+  // masthead and progress rail to reach the first question of the new screen.
+  // Move focus to the heading of the screen they just landed on instead.
+  const active = document.querySelector('.screen.active');
+  const target = active && (active.querySelector('h3, h2, .rhead h2'));
+  if (target) {
+    target.setAttribute('tabindex', '-1');
+    try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+if (typeof window !== 'undefined' && window.addEventListener) {
+  window.addEventListener('popstate', function (e) {
+    showScreen(e.state && typeof e.state.step === 'number' ? e.state.step : -1, true);
+  });
+}
+
+// The institution and the respondent are printed on the result. A governance
+// record that cannot say who described it is worth less than one that can.
+function gateStart() {
+  const btn = document.getElementById('startbtn');
+  if (!btn) return;
+  const inst = (document.getElementById('f-inst').value || '').trim();
+  const who = (document.getElementById('f-name').value || '').trim();
+  const ok = inst.length > 1 && who.length > 1;
+  btn.disabled = !ok;
+  const hint = document.getElementById('starthint');
+  if (hint) hint.textContent = ok ? '' : 'Add the institution and who is completing this to begin.';
+}
+
+document.getElementById('startbtn').addEventListener('click', () => {
+  if (!document.getElementById('startbtn').disabled) showScreen(0);
+});
+document.addEventListener('click', event => {
+  const btn = event.target.closest('[data-go]');
+  if (!btn || btn.disabled) return;
+  showScreen(Number(btn.dataset.go));
+});
+
+function renderReview() {
+  document.getElementById('reviewbody').innerHTML = COMPONENTS.map((c, ci) =>
+    '<div class="rvcomp"><h5>' + esc(c.name) +
+    '<button type="button" data-go="' + ci + '">Change</button></h5>' +
+    c.items.map((item, ii) => {
+      const a = answers[item.id];
+      const unscored = a && (a.dk || a.na);
+      const said = !a ? 'Not answered'
+        : a.na ? 'Not applicable'
+        : a.dk ? 'Don\u2019t know'
+        : item.options[a.v];
+      return '<div class="rvrow' + (unscored ? ' unscored' : '') + '"><b>' + (ii + 1) + '</b>' +
+        '<span><span class="rvq">' + esc(item.stem) + '</span>' +
+        '<span class="rva">' + esc(said) + '</span></span></div>';
+    }).join('') + '</div>').join('');
+  const dk = Object.values(answers).filter(a => a.dk).length;
+  const na = Object.values(answers).filter(a => a.na).length;
+  document.getElementById('hint-review').textContent =
+    '25 answered' + (dk ? ' · ' + dk + ' don\u2019t know' : '') + (na ? ' · ' + na + ' not applicable' : '');
+}
+
+let armedForToggle = null;
+
+function armToggle(target) {
+  const choice = target && target.closest && target.closest('.choice');
+  const input = choice && choice.querySelector('input[type="radio"]');
+  armedForToggle = (input && input.checked) ? input : null;
+}
+
+// Arm on both: pointer events cover normal browsing, mousedown covers anything
+// that synthesises a legacy click sequence, and keydown covers Space.
+form.addEventListener('pointerdown', e => armToggle(e.target));
+form.addEventListener('mousedown', e => armToggle(e.target));
+form.addEventListener('keydown', e => { if (e.key === ' ') armToggle(e.target); });
+
+// A label wrapping an input emits TWO click events: one targeting the label,
+// then one the browser forwards to the input. Acting on the first unchecks the
+// radio and the second immediately re-checks it, so only the forwarded event
+// (the last in the sequence) can carry the toggle.
+form.addEventListener('click', e => {
+  const input = (e.target && e.target.tagName === 'INPUT' && e.target.type === 'radio') ? e.target : null;
+  if (!input) return;
+  if (armedForToggle === input) {
+    input.checked = false;
+    delete answers[input.dataset.item];
+    const el = document.getElementById(input.dataset.item + '_item');
+    if (el) el.classList.remove('answered', 'unscored');
+    update();
+    save();
+  }
+  armedForToggle = null;
+});
+
+function update() {
+  const responded = Object.keys(answers).length;
+  document.getElementById('pnum').textContent = responded;
+  document.getElementById('barfill').style.width = (responded / 25 * 100) + '%';
+
+  document.getElementById('steps').innerHTML = COMPONENTS.map((c, i) => {
+    const done = c.items.every(item => answers[item.id]);
+    const state = i === step ? 'now' : done ? 'done' : '';
+    return '<li class="step ' + state + '"' + (i === step ? ' aria-current="step"' : '') + '>' +
+      '<b>' + (i + 1) + '</b><i>' + c.layer + '</i>' +
+      '<span class="sr-only">Section ' + (i + 1) + ' of ' + COMPONENTS.length + ', ' +
+      c.name + (done ? ' — complete' : '') + '</span></li>';
+  }).join('');
+
+  // A component gates its own Next: every question needs a response, but
+  // "Don't know" and "Not applicable" are responses. Nobody is forced to
+  // invent an answer to get past a screen.
+  COMPONENTS.forEach(c => {
+    const answered = c.items.filter(item => answers[item.id]).length;
+    const btn = document.getElementById('next-' + c.id);
+    const hint = document.getElementById('hint-' + c.id);
+    if (!btn) return;
+    btn.disabled = answered < c.items.length;
+    hint.textContent = btn.disabled ? 'Answer all ' + c.items.length + ' to continue.' : '';
+  });
+}
+
+/* ----------------------------------------------------------------- render */
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
+
+// The ladder renders in reverse build order, so "above" means "later in build
+// order". When the break IS the last build layer there is nothing above it, and
+// the v1 copy ("everything above rests on...") pointed at an empty set. Pure so
+// the harness can pin both branches against the real ladder.
+function fractureCopy(results, breakResult) {
+  const hasAbove = results.indexOf(breakResult) < results.length - 1;
+  return hasAbove
+    ? 'Everything above rests on ' + breakResult.component.name + ' — which is not yet load-bearing'
+    : breakResult.component.name + ' is where the floor stops — every layer beneath it holds';
+}
+
+function render() {
+  const s = scoreAll();
+
+  // Ladder renders bottom-up: last build layer at top, first at the bottom.
+  let ladder = '';
+  [...s.results].reverse().forEach(r => {
+    const breaks = s.firstBreak && s.firstBreak.component.id === r.component.id;
+    if (breaks) {
+      ladder += '<div class="fracture">' + esc(fractureCopy(s.results, r)) + '</div>';
+    }
+    const shown = r.pct === null ? '—' : Math.round(r.pct) + '%';
+    ladder +=
+      '<div class="rung ' + (breaks ? 'breaks' : r.insufficient ? 'insuf' : 'holds') + '">' +
+      '<div class="lorder">' + r.component.order + '<b>' + r.component.layer + '</b></div>' +
+      '<div class="lname"><strong>' + r.component.num + ' · ' + esc(r.component.name) + '</strong>' +
+      '<em>' + r.band.label + ' — ' + r.band.note + '</em></div>' +
+      '<div class="lscore"><div class="n">' + shown + '</div>' +
+      '<div class="gauge"><span style="width:' + (r.pct === null ? 0 : r.pct) + '%"></span></div>' +
+      '<div class="cov">' + r.scored + ' of ' + r.applicable + ' assessed' +
+      (r.na ? ' · ' + r.na + ' n/a' : '') + '</div></div></div>';
+  });
+
+  // Gaps are scoped to the FOCUS component only. The v1 built this list across
+  // all 25 items and rendered it inside the component-scoped box, so items from
+  // other components read as reasons to start here.
+  let focus;
+  if (s.firstBreak) {
+    const f = s.firstBreak;
+    const weak = f.component.items
+      .map(item => ({ item, a: answers[item.id] }))
+      .filter(x => x.a && !x.a.dk && !x.a.na && x.a.v <= 1)
+      .sort((a, b) => a.a.v - b.a.v);
+    const unknown = f.component.items.filter(item => answers[item.id] && answers[item.id].dk);
+    // Capped at 3. When every question in a component is weak, listing all of
+    // them repeats what the band already said and buries the specific ones.
+    const GAP_CAP = 3;
+    const shownGaps = weak.slice(0, GAP_CAP);
+    const gapsList = weak.length
+      ? '<p class="gapscope">Where ' + f.component.num + ' is weakest' +
+        '</p><ul class="gaps">' +
+        shownGaps.map(x => '<li><b>' + x.item.id.replace('c', '') + '</b><span>' + esc(x.item.stem) + '</span></li>').join('') + '</ul>'
+      : '';
+    const unknownList = unknown.length
+      ? '<p class="gapscope">Could not be assessed within ' + f.component.num + '</p><ul class="gaps">' +
+        unknown.map(item => '<li><b>' + item.id.replace('c', '') + '</b><span>' + esc(item.stem) + '</span></li>').join('') + '</ul>'
+      : '';
+    focus =
+      '<div class="focus"><div class="fhead"><div class="eyebrow">Start here</div>' +
+      '<h5>' + f.component.num + ' · ' + esc(f.component.name) + '</h5></div><div class="fbody">' +
+      '<p><b>Why this one, and not simply your lowest score.</b> This is the first component in build order that is not yet load-bearing. Components above it may score higher, but cannot reliably hold under a contested decision until the foundation underneath them does.</p>' +
+      '<p class="why">' + esc(COMPONENT_ACTIONS[f.component.id].why) + '</p>' +
+      '<p><b>' + (f.insufficient ? 'Not enough visibility to rate' : f.band.label) + ' — do this next.</b> ' + esc(actionFor(f)) + '</p>' +
+      gapsList + unknownList + '</div></div>';
+  } else {
+    focus =
+      '<div class="focus"><div class="fhead"><div class="eyebrow">Start here</div>' +
+      '<h5>Phase 2 — and a stated revision cadence</h5></div><div class="fbody">' +
+      '<p>All five Phase 1 components are load-bearing. Move to Phase 2 — use-case inventory including shadow AI, and human-in-the-loop and appeal rules — while confirming the review interval that keeps Phase 1 current.</p></div></div>';
+  }
+
+  const headline = s.insufficientOverall
+    ? '<div class="scoreline"><div class="bignum">—</div><div class="band">Insufficient evidence</div>' +
+      '<p class="bandtext">Only ' + s.totalScored + ' of ' + s.totalApplicable +
+      ' applicable questions could be assessed. Below two-thirds coverage no overall band is issued — a result built on this little information would mislead. The component ladder below still shows what is known.</p></div>'
+    : '<div class="scoreline"><div class="bignum">' + Math.round(s.compensatory) + '<s>%</s></div>' +
+      '<div class="band">' + s.overall.band + '</div>' +
+      '<p class="bandtext">' + s.overall.text + '</p>' +
+      (s.capped
+        ? '<p class="capnote"><b>This band is limited by the ladder, not by the average.</b> The component averages alone would read higher, but ' +
+          esc(s.firstBreak.component.name) + ' is not yet load-bearing, so everything resting on it is not yet dependable.</p>'
+        : '') + '</div>';
+
+  // Only worth saying when the count is a finding. One unknown answer is not.
+  const dkBlock = s.totalDk >= 3
+    ? '<div class="flag"><b>' + s.totalDk + ' answers marked “Don’t know.”</b> ' +
+      'Governance that responsible people cannot describe is not yet operating, whatever exists on paper.</div>'
+    : '';
+
+  const naBlock = '';
+
+  // The sequenced plan: every component after the focus one, in build order,
+  // each with the action for the band it is actually in. This is the ordered
+  // work, not a ranked list of weaknesses.
+  const focusIdx = s.firstBreak ? s.results.indexOf(s.firstBreak) : -1;
+  const rest = s.results.filter((r, i) => i > focusIdx);
+  const plan = rest.length
+    ? '<h4 class="rsub">Then, in build order</h4>' +
+      '<p class="rlead">Each of these rests on the one before it.</p>' +
+      '<ol class="plan">' + rest.map(r =>
+        '<li><div class="pname">' + r.component.num + ' · ' + esc(r.component.name) +
+        '<span class="pband">' + (r.insufficient ? 'not enough visibility to rate' : r.band.label) + '</span></div>' +
+        '<p>' + esc(actionFor(r)) + '</p></li>').join('') + '</ol>'
+    : '';
+
+  // The diagnosis, placed directly under the headline: it is the interpretation
+  // the rest of the report explains. Withheld entirely when a layer contains an
+  // unassessed component — a guessed shape is worse than none.
+  const pat = patternFor(s.results);
+  const patternBlock = s.insufficientOverall ? '' : (pat
+    ? '<div class="pattern"><div class="peyebrow">The shape of your floor</div>' +
+      '<h3>' + esc(pat.name) + '</h3>' +
+      '<div class="pbits">' + [1, 2, 3].map((tier, i) =>
+        '<span class="pbit ' + (pat.signature[i] === '1' ? 'on' : 'off') + '">' +
+        LAYER_NAMES[tier] + '</span>').join('') + '</div>' +
+      '<p>' + esc(pat.looks) + '</p>' +
+      '<p class="pnext"><b>What tends to happen next.</b> ' + esc(pat.next) + '</p></div>'
+    : '<div class="pattern indet"><div class="peyebrow">The shape of your floor</div>' +
+      '<h3>Not yet determinable</h3>' +
+      '<p>One of the three layers contains a component that could not be assessed, so the shape of your floor cannot be named without guessing at it. Establishing what exists in that layer is worth doing before anything else: if the people best placed to answer cannot describe whether something exists, it is not operating, whatever may be on file.</p></div>');
+
+  // Print-only record of what was answered. The question screens are
+  // display:none by the time anyone prints, so without this the PDF states a
+  // conclusion with no trace of the evidence behind it — and this document is
+  // meant to be re-read months later, next to the artifacts it names.
+  const appendix =
+    '<div class="appendix"><h4 class="rsub">Appendix: responses as given</h4>' +
+
+    s.results.map(r =>
+      '<div class="apcomp"><h5>' + r.component.num + ' · ' + esc(r.component.name) + '</h5>' +
+      r.component.items.map(item => {
+        const a = answers[item.id];
+        const said = !a ? '—'
+          : a.na ? 'Not applicable'
+          : a.dk ? 'Don’t know'
+          : item.options[a.v];
+        return '<div class="aprow"><b>' + item.id.replace('c', '') + '</b>' +
+               '<span class="apq">' + esc(item.stem) + '</span>' +
+               '<span class="apa">' + esc(said) + '</span></div>';
+      }).join('') + '</div>').join('') + '</div>';
+
+  document.getElementById('rbody').innerHTML =
+    headline + patternBlock +
+    '<h4 class="rsub">Your dependency ladder</h4>' +
+    '<p class="rlead">Read from the bottom up. Each layer is load-bearing for the one above it, so the sequence — not the score — determines where to start. A component holds at ' + HOLD + '% or above.</p>' +
+    '<div class="ladder">' + ladder + '</div>' +
+    focus + plan + dkBlock + naBlock + appendix +
+    '<div class="disclose"><b>How to read this.</b> A structured self-assessment: one respondent, one institution, against the five Phase 1 components of the Minimum Viable Governance framework and their build order. Its value is the sequence, not the percentage.<br><br>' +
+    'Anything named here as a gap describes what a respondent believes, so confirm it against the document before acting on it. Thresholds are set by subject-matter judgment, not a normative sample.</div>' +
+    '<div class="nextstep"><div class="peyebrow">Where this goes next</div>' +
+    '<p>This assessment names where your floor breaks and in what order to close it. Doing that work is a different exercise: it needs someone to write the definitional standard, draft the tiers, and stand up the review path, with the authority to make them stick.</p>' +
+    '<p>Strategies by Design Group works with institutions on exactly this sequence. Bring this result to the conversation.</p>' +
+    '<p class="contact">[SBD: contact line, booking link or email goes here]</p></div>' +
+    '<div class="actions">' +
+    '<button class="act primary" id="printbtn" type="button">Print or save as PDF</button>' +
+    '<button class="act" id="copybtn" type="button">Copy summary</button>' +
+    '<button class="act" id="resetbtn" type="button">Start over</button>' +
+    '<span class="toast" id="toast" aria-live="polite"></span></div>';
+
+  document.getElementById('printbtn').addEventListener('click', () => window.print());
+  document.getElementById('resetbtn').addEventListener('click', reset);
+  document.getElementById('copybtn').addEventListener('click', () => copySummary(s));
+}
+
+function copySummary(s) {
+  const val = id => document.getElementById(id).value || '—';
+  const lines = [
+    'MINIMUM VIABLE GOVERNANCE — READINESS ASSESSMENT (Phase 1)',
+    'Institution: ' + val('f-inst') + '   Completed by: ' + val('f-name') + ' (' + val('f-role') + ')   Date: ' + val('f-date'),
+    '',
+    s.insufficientOverall
+      ? 'Overall: INSUFFICIENT EVIDENCE (' + s.totalScored + ' of ' + s.totalApplicable + ' assessed)'
+      : 'Overall: ' + Math.round(s.compensatory) + '% — ' + s.overall.band + (s.capped ? ' (limited by the dependency ladder)' : ''),
+    '',
+    'By component (build order):',
+    ...s.results.map(r =>
+      '  ' + r.component.order.padEnd(7) + ' ' + r.component.num + ' ' + r.component.name + ': ' +
+      (r.pct === null ? '—' : Math.round(r.pct) + '%') + ' — ' + r.band.label +
+      ' (' + r.scored + '/' + r.applicable + ' assessed)'),
+    '',
+    'Start here: ' + (s.firstBreak ? s.firstBreak.component.num + ' · ' + s.firstBreak.component.name : 'Phase 2 — floor holds'),
+    s.totalDk ? 'Marked "Don\'t know": ' + s.totalDk + ' (not scored; reported as a finding)' : '',
+    s.totalNa ? 'Marked "Not applicable": ' + s.totalNa + ' (removed from calculation)' : '',
+    '',
+    'Structured self-assessment, not an audit. Cut points provisional.'
+  ].filter(Boolean).join('\n');
+
+  const toast = document.getElementById('toast');
+  navigator.clipboard.writeText(lines)
+    .then(() => { toast.textContent = 'Summary copied.'; })
+    .catch(() => { toast.textContent = 'Copy unavailable — select and copy manually.'; });
+  setTimeout(() => { toast.textContent = ''; }, 2600);
+}
+
+function reset() {
+  form.querySelectorAll('input[type="radio"]').forEach(i => { i.checked = false; });
+  form.querySelectorAll('.item').forEach(i => i.classList.remove('answered', 'unscored'));
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.getElementById('rbody').innerHTML = '';
+  CTX_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  clearSaved();
+  showScreen(-1);
+  gateStart();
+}
+
+/* ------------------------------------------------------------------ boot */
+
+// The date is stamped, not asked. This is filled in as you go, so the day the
+// record is created IS the date, and there is no workflow where a respondent
+// would want a different one. Built from local parts rather than toISOString(),
+// which is UTC and would read as yesterday for anyone completing this in the
+// evening west of Greenwich.
+function todayStamp() {
+  const d = new Date();
+  try {
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  } catch (e) {
+    return (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+  }
+}
+
+function paintDate() {
+  const f = document.getElementById('f-date');
+  const label = document.getElementById('datestamp');
+  if (f && !f.value) f.value = todayStamp();
+  if (label && f) label.textContent = f.value;
+}
+paintDate();
+
+const saved = restore();
+paintDate();   // a resumed record keeps the day it was started
+if (saved) {
+  const bar = document.getElementById('resume');
+  bar.hidden = false;
+  document.getElementById('resumetext').textContent =
+    'You have an assessment in progress — ' + saved.count + ' of 25 answered.';
+  document.getElementById('resumebtn').addEventListener('click', () => {
+    bar.hidden = true;
+    showScreen(Math.min(saved.step, RESULTS_STEP));
+  });
+  document.getElementById('freshbtn').addEventListener('click', () => {
+    bar.hidden = true;
+    clearSaved();
+    reset();
+  });
+}
+
+// Persist context fields as they are typed, not only on screen change.
+CTX_FIELDS.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => { save(); gateStart(); });
+});
+
+// Last line of defence. Only warn when there is real work to lose and the
+// result has not been reached — nagging on a finished assessment is noise.
+if (typeof window !== 'undefined' && window.addEventListener) {
+  window.addEventListener('beforeunload', event => {
+    const n = Object.keys(answers).length;
+    if (n > 0 && n < 25 && step >= 0 && step < RESULTS_STEP) {
+      event.preventDefault();
+      event.returnValue = '';
+      return '';
+    }
+  });
+}
+
+update();   // prime the progress rail and the Next gates before the first paint
+gateStart();
+
+// Exported for scripts/test-instrument.js — the harness runs THIS code, not a
+// copy of it. Keep this line in sync with any renamed function.
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { COMPONENTS, SCALE, COMPONENT_BANDS, OVERALL_BANDS, COMPONENT_ACTIONS, LAYER_PATTERNS, LAYER_NAMES, HOLD, MIN_ITEMS_SCORED, COVERAGE_FLOOR, INSTRUMENT_VERSION, SCREENS, REVIEW_STEP, RESULTS_STEP, STORAGE_KEY, answers, componentResult, scoreAll, fractureCopy, actionFor, layerSignature, patternFor, render, renderReview };
+}
+</script>
+</body>
+</html>

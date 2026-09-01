@@ -1,0 +1,14 @@
+# Internal working documents. This repository is public so GitHub Pages can
+# serve the assessment; these stay local.
+#
+#   content/index.v1-presence.html.bak   the client's original prototype
+#   content/instrument-decisions.md      design record and audit trail
+#   content/item-changelog.md            build history
+#   content/layer-patterns-DRAFT.md      draft copy, unconfirmed claims
+#   REVIEW-CHECKLIST.md                  client handover list
+content/
+REVIEW-CHECKLIST.md
+
+node_modules/
+.DS_Store
+*.tmp
