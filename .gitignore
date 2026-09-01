@@ -12,3 +12,8 @@ REVIEW-CHECKLIST.md
 node_modules/
 .DS_Store
 *.tmp
+
+# local proof renders
+_proof.pdf
+*.docx
+_proofview.html
