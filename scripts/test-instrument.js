@@ -626,6 +626,19 @@ t('PATTERN · every pattern has a name, a description and a consequence', () => 
   return bad.length === 0 || 'incomplete pattern copy at: ' + bad.map(x => x[0]).join(', ');
 });
 
+t('PATTERN · no pattern name reuses an overall band name', () => {
+  // The band and the pattern are different readings and can disagree: all five
+  // components holding at 67% gives band "Partial floor" and a pattern where
+  // every layer holds. While those two scales shared the phrase "Floor in
+  // place" the report contradicted itself on any mid-range result, which is
+  // where most institutions land. Nothing errored and no test looked.
+  const bands = OVERALL_BANDS.map(b => b.band.trim().toLowerCase());
+  const clash = Object.keys(LAYER_PATTERNS)
+    .filter(sig => bands.indexOf(LAYER_PATTERNS[sig].name.trim().toLowerCase()) !== -1)
+    .map(sig => sig + ' "' + LAYER_PATTERNS[sig].name + '"');
+  return clash.length === 0 || 'pattern name reuses an overall band name: ' + clash.join(', ');
+});
+
 t('PATTERN · pattern names are distinct', () => {
   const names = Object.values(LAYER_PATTERNS).map(v => v.name);
   return new Set(names).size === names.length || 'duplicate pattern names';

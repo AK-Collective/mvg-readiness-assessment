@@ -705,7 +705,16 @@ function actionFor(result) {
    ------------------------------------------------------------------------- */
 const LAYER_PATTERNS = {
   '111': {
-    name: 'Floor in place',
+    // NOT "Floor in place". That is the name of the top OVERALL band, and the
+    // two are computed from different things: the band from the mean across
+    // components, the pattern from whether every layer holds. An institution at
+    // 67% across all five has every layer holding while the mean sits in the
+    // band below, so the report printed "Partial floor" and "Floor in place"
+    // twenty pixels apart — two true statements in two vocabularies the reader
+    // has no way to tell apart. Renaming the band would not have fixed it; the
+    // clash is with "Partial floor", not with the band of the same name.
+    // The echo of "Stated, not built" is deliberate: opposite ends of one arc.
+    name: 'Built, and aging',
     looks: 'Shared language exists and is used. The data boundary is published and reachable at the point of work. Vendor review and intake both run, with named sign-off. Someone can settle a contested question by pointing at something.',
     next: 'The risk shifts from absence to drift. Phase 1 artifacts age quietly, and a governance floor nobody revisits stops describing what the institution actually does within about a year.'
   },
