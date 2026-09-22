@@ -91,8 +91,10 @@
   .context input::placeholder{color:rgba(93,107,128,.45)}
   .context input:focus{outline:none;border-bottom-color:var(--gold-ink);border-bottom-width:2px}
   .howto details.note{margin:18px 0 0;border-top:1px solid var(--line);padding-top:14px}
+  /* padding, not just line-height: at 22px tall this toggle sat under the
+     24px minimum target size (WCAG 2.2 SC 2.5.8). */
   .howto details.note summary{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
-    color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+    color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;padding:5px 0}
   .howto details.note summary::-webkit-details-marker{display:none}
   .howto details.note summary:before{content:"+";font-size:14px;color:var(--gold-ink);font-weight:700}
   .howto details.note[open] summary:before{content:"–"}
@@ -381,7 +383,7 @@
     <div class="ctxhead"><span class="ctxnum">2</span><h2>How to answer</h2></div>
     <ol>
       <li><b>Answer for what is actually operating</b>, not what is drafted, intended, or sitting in a folder.</li>
-      <li><b>Use <i>Don't know</i> honestly.</b> It is never scored against you.</li>
+      <li><b>Use <i>Don’t know</i> honestly.</b> It never counts as a low answer, and a lot of them is a finding in its own right.</li>
       <li><b>Use <i>Not applicable</i> only when the question genuinely cannot apply</b> to your institution.</li>
       <li><b>Have several people complete it separately.</b> Where informed colleagues describe the same thing differently, that disagreement is the finding.</li>
       <li><b>Click a selected answer again to clear it.</b></li>
@@ -460,7 +462,7 @@ const SCALE = [
   { v: 1,    key: 'emg',  label: 'Emerging',     mark: '1' },
   { v: 2,    key: 'est',  label: 'Established',  mark: '2' },
   { v: 3,    key: 'opr',  label: 'Operating',    mark: '3' },
-  { v: null, key: 'dk',   label: "Don't know",   mark: '?', dk: true },
+  { v: null, key: 'dk',   label: 'Don’t know',   mark: '?', dk: true },
   { v: null, key: 'na',   label: 'Not applicable', mark: '—', na: true }
 ];
 
@@ -486,7 +488,7 @@ const COMPONENTS = [
         'Expectations exist for one or two roles, usually technical or teaching, and not the rest.',
         'Most roles have a stated expectation, though some groups are unclear where they fit.',
         'Each role has a distinct, stated expectation, and people can describe their own.' ] },
-      { id:'c01.4', stem:'Where does AI fluency actually live in your institution\'s routines?', options:[
+      { id:'c01.4', stem:'Where does AI fluency actually live in your institution’s routines?', options:[
         'Nowhere. Whatever happens is ad hoc.',
         'In optional one-off sessions, such as a workshop or a lunch and learn.',
         'It has been added to one existing structure, such as onboarding, but unevenly.',
@@ -571,17 +573,17 @@ const COMPONENTS = [
         'It comes up occasionally, depending on who is reviewing.',
         'It is asked as standard, though unclear answers are not always pursued.',
         'Vendors are required to disclose it, and unclear answers are pursued before signing.' ] },
-      { id:'c03.3', stem:'How is a vendor\'s accessibility conformance established?', options:[
+      { id:'c03.3', stem:'How is a vendor’s accessibility conformance established?', options:[
         'It is not raised.',
-        'The vendor\'s own assertion is accepted.',
+        'The vendor’s own assertion is accepted.',
         'Documentation is requested, and accepted as provided.',
         'Documentation is required and verified, rather than taken at face value.' ] },
-      { id:'c03.4', stem:'How does the institution learn how a vendor\'s AI features may change after signing?', options:[
+      { id:'c03.4', stem:'How does the institution learn how a vendor’s AI features may change after signing?', options:[
         'It is not considered.',
         'Only what the vendor volunteers during the sales conversation.',
         'Roadmap questions are asked, though the answers are not recorded or revisited.',
         'Vendors are required to disclose how AI features may change, and it is recorded.' ] },
-      { id:'c03.5', stem:'When a vendor\'s answers are poor, what happens?', options:[
+      { id:'c03.5', stem:'When a vendor’s answers are poor, what happens?', options:[
         'There is nothing to compare the answers against.',
         'It is a judgment call by whoever is reviewing, case by case.',
         'There is a stated review threshold, though which answers are disqualifying is unclear.',
@@ -613,7 +615,7 @@ const COMPONENTS = [
         'A response-time expectation is published, and generally met.' ] },
       { id:'c04.5', stem:'What happens to an AI decision once it has been made?', options:[
         'Nothing. It exists only with the people who made it.',
-        'It is recorded in the requester\'s own email or files.',
+        'It is recorded in the requester’s own email or files.',
         'It is recorded centrally, though it is hard for others to find or reuse.',
         'It is recorded somewhere others can find and reuse it.' ] }
     ]}
@@ -1233,6 +1235,9 @@ function render() {
     const shownGaps = weak.slice(0, GAP_CAP);
     const gapsList = weak.length
       ? '<p class="gapscope">Where ' + f.component.num + ' is weakest' +
+        // Naming the count when the cap bites. Without it a reader fixes the
+        // three listed questions and has no way to know two more qualified.
+        (weak.length > GAP_CAP ? ' · ' + GAP_CAP + ' of ' + weak.length + ' shown' : '') +
         '</p><ul class="gaps">' +
         shownGaps.map(x => '<li><b>' + x.item.id.replace('c', '') + '</b><span>' + esc(x.item.stem) + '</span></li>').join('') + '</ul>'
       : '';
