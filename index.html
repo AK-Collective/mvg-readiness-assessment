@@ -91,8 +91,6 @@
   .howto details.note p{margin:14px 0 0;font-size:13px;color:var(--muted);line-height:1.65}
   .progress{position:sticky;top:0;z-index:20;background:rgba(247,243,234,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-top:44px}
   .progress-inner{max-width:920px;margin:0 auto;padding:11px 28px 12px;display:flex;align-items:flex-end;gap:20px}
-  .bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent;overflow:hidden}
-  .bar span{display:block;height:100%;width:0;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1)}
   .pcount{font-size:15px;font-weight:800;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;
     font-family:var(--display);line-height:1}
   .pcount .pof{font-size:11px;color:var(--muted);font-weight:700;font-family:var(--body)}
@@ -112,14 +110,12 @@
   .shead{padding:26px 30px 22px;border-bottom:1px solid var(--line);display:flex;gap:20px;align-items:flex-start}
   .snum{font-family:var(--display);font-size:30px;font-weight:600;color:var(--gold-ink);line-height:1;padding-top:4px;min-width:44px}
   .shead h3{font-family:var(--display);font-size:24px;font-weight:600;margin:0;line-height:1.18}
-  .tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}.tag{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:4px 9px;border:1px solid var(--line);color:var(--muted)}
-  .tag.layer{background:var(--ink);color:var(--gold-soft);border-color:var(--ink)}.shead p{margin:12px 0 0;font-size:14px;color:var(--muted);max-width:62ch}
+  .shead p{margin:12px 0 0;font-size:14px;color:var(--muted);max-width:62ch}
   .item{padding:22px 30px;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item.answered{background:linear-gradient(90deg,rgba(200,162,74,.07),transparent 45%)}
   .item.unscored{background:linear-gradient(90deg,rgba(93,107,128,.08),transparent 45%)}
-  .stmt{display:flex;gap:14px;margin:0 0 16px}
-  .sidx{font-size:11px;font-weight:800;color:var(--gold-ink);padding-top:5px;min-width:38px;font-variant-numeric:tabular-nums;letter-spacing:.06em}
+  .stmt{margin:0 0 16px}
   .stmt p{margin:0;font-family:var(--display);font-size:18px;font-weight:600;color:var(--ink);line-height:1.35;max-width:56ch;text-wrap:pretty}
-  .choices{display:flex;flex-direction:column;gap:0;margin-left:52px;border-top:1px solid var(--line)}
+  .choices{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
   .choice{position:relative;display:block;border-bottom:1px solid var(--line)}
   .choice input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
   .opt{display:flex;gap:14px;align-items:flex-start;padding:13px 16px 13px 17px;font-size:14.5px;color:var(--navy);
@@ -231,17 +227,30 @@
   .foot a{color:var(--muted)}
   /* ---- screen flow ---- */
   .screen{display:none}.screen.active{display:block}
-  .steps{display:flex;gap:2px;align-items:stretch;flex:1;min-width:0;list-style:none;margin:0;padding:0}
-  .step{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;padding:2px 0;
-    border-top:3px solid var(--ice-soft);transition:border-color .3s ease,color .3s ease;color:var(--muted)}
+  /* One progress indicator, not two at different scales. Each section's bar
+     fills by how many of its five are answered — which is what the separate
+     full-bleed bar used to say, at a width that never lined up with the
+     sections it sat above.
+
+     The Define / Bound / Operate grouping is deliberately NOT here. It is the
+     spine of the diagnosis, but a respondent meets it for the first time on the
+     result, where the ladder shows which components carry which stage and the
+     pattern block gives it a job. Printed over a progress rail it asked them to
+     hold a concept they had not been given and did not yet need, and the
+     repetition (DEFINE, DEFINE, BOUND, OPERATE, OPERATE) read as a fault. */
+  .steps{display:flex;gap:6px;flex:1;min-width:0;list-style:none;margin:0;padding:0}
+  .step{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;
+    color:var(--muted);transition:color .3s ease}
+  .step .track{display:block;width:100%;height:3px;background:var(--ice-soft);overflow:hidden;
+    transition:background .3s ease}
+  .step .track i{display:block;height:100%;width:0;background:var(--gold);
+    transition:width .4s cubic-bezier(.4,0,.2,1)}
   .step b{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.04em}
-  .step i{font-style:normal;font-size:9px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;opacity:.62;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .step.done{border-top-color:var(--gold);color:var(--navy)}
-  .step.now{border-top-color:var(--ink);color:var(--ink)}
-  .step.now i{opacity:1;color:var(--gold-ink)}
+  .step.done{color:var(--navy)}
+  /* The section you are on has to read as current even at nothing answered. */
+  .step.now{color:var(--ink)}
+  .step.now .track{background:var(--ice)}
   @media(max-width:600px){
-    .step i{display:none}
     /* On a phone the compact title wraps to two lines and costs more than it
        earns. The eyebrow already says what this is. */
     .mast.compact h1{display:none}
@@ -266,7 +275,7 @@
   button.next{font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:13px 26px;border:1.5px solid var(--ink);background:var(--ink);color:var(--cream);cursor:pointer}
   button.next:hover:not(:disabled){background:var(--navy-mid);border-color:var(--navy-mid)}
   button.next:disabled{background:transparent;border-color:var(--line);color:var(--muted);cursor:not-allowed}
-  @media(max-width:760px){.choices{margin-left:0}.choices-alt .choice{min-width:100%}.stmt{gap:10px}.rung{grid-template-columns:74px 1fr}.lscore{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}.shead{flex-direction:column;gap:10px}}
+  @media(max-width:760px){.choices-alt .choice{min-width:100%}.rung{grid-template-columns:74px 1fr}.lscore{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}.shead{flex-direction:column;gap:10px}}
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
   @media print{
     body{background:#fff;font-size:11pt}.progress,.actions,.howto{display:none}
@@ -354,12 +363,10 @@
 </div>
 </section>
 
-<aside class="progress" id="progressbar" aria-label="Assessment progress" style="display:none"><div style="position:relative">
+<aside class="progress" id="progressbar" aria-label="Assessment progress" style="display:none">
   <div class="progress-inner">
     <ol class="steps" id="steps"></ol>
     <div class="pcount"><span id="pnum">0</span><span class="pof">/25</span></div>
-    <div class="bar" aria-hidden="true"><span id="barfill"></span></div>
-  </div>
   </div>
 </aside>
 
@@ -898,8 +905,7 @@ COMPONENTS.forEach((component, ci) => {
   section.className = 'section';
   section.innerHTML =
     '<div class="shead"><div class="snum">' + (ci + 1) + '</div><div>' +
-    '<h3>' + component.name + '</h3><div class="tags">' +
-    '<span class="tag layer">Section ' + (ci + 1) + ' of ' + COMPONENTS.length + ' · ' + component.layer + '</span></div>' +
+    '<h3>' + component.name + '</h3>' +
     '<p>' + component.blurb + '</p></div></div>';
 
   component.items.forEach(item => {
@@ -920,8 +926,7 @@ COMPONENTS.forEach((component, ci) => {
     el.className = 'item';
     el.id = item.id + '_item';
     el.innerHTML =
-      '<div class="stmt"><div class="sidx">' + (component.items.indexOf(item) + 1) + '</div>' +
-      '<p>' + item.stem + '</p></div>' +
+      '<div class="stmt"><p>' + item.stem + '</p></div>' +
       '<div class="choices" role="radiogroup" aria-label="' + item.stem.replace(/"/g, '&quot;') + '">' +
       scored + '<div class="choices-alt">' + unscored + '</div></div>';
     section.appendChild(el);
@@ -1099,15 +1104,16 @@ form.addEventListener('click', e => {
 function update() {
   const responded = Object.keys(answers).length;
   document.getElementById('pnum').textContent = responded;
-  document.getElementById('barfill').style.width = (responded / 25 * 100) + '%';
 
   document.getElementById('steps').innerHTML = COMPONENTS.map((c, i) => {
-    const done = c.items.every(item => answers[item.id]);
+    const n = c.items.filter(item => answers[item.id]).length;
+    const done = n === c.items.length;
     const state = i === step ? 'now' : done ? 'done' : '';
     return '<li class="step ' + state + '"' + (i === step ? ' aria-current="step"' : '') + '>' +
-      '<b>' + (i + 1) + '</b><i>' + c.layer + '</i>' +
+      '<span class="track"><i style="width:' + (n / c.items.length * 100) + '%"></i></span>' +
+      '<b>' + (i + 1) + '</b>' +
       '<span class="sr-only">Section ' + (i + 1) + ' of ' + COMPONENTS.length + ', ' +
-      c.name + (done ? ' — complete' : '') + '</span></li>';
+      c.name + ' — ' + n + ' of ' + c.items.length + ' answered</span></li>';
   }).join('');
 
   // A component gates its own Next: every question needs a response, but
@@ -1356,13 +1362,27 @@ function paintDate() {
 }
 paintDate();
 
+function savedInstitution() {
+  const el = document.getElementById('f-inst');
+  return el && el.value ? el.value.trim() : '';
+}
+
 const saved = restore();
 paintDate();   // a resumed record keeps the day it was started
 if (saved) {
   const bar = document.getElementById('resume');
   bar.hidden = false;
-  document.getElementById('resumetext').textContent =
-    'You have an assessment in progress — ' + saved.count + ' of 25 answered.';
+  // A finished assessment restores too, and announcing it as "in progress — 25
+  // of 25 answered" reads as a stalled form rather than a saved result. The
+  // likeliest reload of all is someone reopening the tab they printed from.
+  const finished = saved.step >= RESULTS_STEP;
+  document.getElementById('resumetext').textContent = finished
+    ? 'Your result for ' + (savedInstitution() || 'this institution') + ' is saved on this browser.'
+    : 'You have an assessment in progress — ' + saved.count + ' of 25 answered.';
+  document.getElementById('resumebtn').textContent =
+    finished ? 'Open my result' : 'Continue where I left off';
+  document.getElementById('freshbtn').textContent =
+    finished ? 'Start a new one' : 'Start again';
   document.getElementById('resumebtn').addEventListener('click', () => {
     bar.hidden = true;
     showScreen(Math.min(saved.step, RESULTS_STEP));
