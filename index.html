@@ -1370,11 +1370,13 @@ function copySummary(s) {
       ' (' + r.scored + '/' + r.applicable + ' assessed)'),
     '',
     'Start here: ' + (s.firstBreak ? s.firstBreak.component.num + ' · ' + s.firstBreak.component.name : 'Phase 2 — floor holds'),
-    s.totalDk ? 'Marked "Don\'t know": ' + s.totalDk + ' (not scored; reported as a finding)' : '',
-    s.totalNa ? 'Marked "Not applicable": ' + s.totalNa + ' (removed from calculation)' : '',
+    s.totalDk ? 'Marked \u201cDon\u2019t know\u201d: ' + s.totalDk + ' (not scored; reported as a finding)' : null,
+    s.totalNa ? 'Marked \u201cNot applicable\u201d: ' + s.totalNa + ' (removed from calculation)' : null,
     '',
     'Structured self-assessment, not an audit. Cut points provisional.'
-  ].filter(Boolean).join('\n');
+    // filter(Boolean) also ate every '' spacer above, so the pasted summary
+    // arrived as one dense block. Only the two conditional lines may vanish.
+  ].filter(l => l !== null).join('\n');
 
   const toast = document.getElementById('toast');
   navigator.clipboard.writeText(lines)
