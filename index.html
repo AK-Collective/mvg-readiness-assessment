@@ -79,12 +79,17 @@
   .ctxhead h2{font-family:var(--display);font-size:21px;font-weight:600;margin:0}
   .ctxhead p{grid-column:2/-1;margin:6px 0 0;font-size:13px;color:var(--muted);max-width:56ch}
   .context{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--ink);padding:26px 30px;margin:38px 0 0}
-  .ctxgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:20px;margin:22px 0 0}
+  /* 220 not 190: at tablet width three columns gave the institution field
+     197px, and "Northgate Community College" needs 214 — so the one value that
+     gets printed at the top of a board document was scrolling out of its own
+     box while being typed. At 220 the tablet band drops to two columns and the
+     desktop layout is unchanged. */
+  .ctxgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin:22px 0 0}
   .context label{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--muted);margin-bottom:7px}
   .context input{width:100%;font-family:var(--body);font-size:15px;color:var(--ink);background:transparent;
     border:0;border-bottom:1.5px solid var(--line);padding:7px 2px;transition:border-color .2s ease}
   .context input::placeholder{color:rgba(93,107,128,.45)}
-  .context input:focus{outline:none;border-bottom-color:var(--gold);border-bottom-width:2px}
+  .context input:focus{outline:none;border-bottom-color:var(--gold-ink);border-bottom-width:2px}
   .howto details.note{margin:18px 0 0;border-top:1px solid var(--line);padding-top:14px}
   .howto details.note summary{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
     color:var(--muted);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
@@ -133,7 +138,7 @@
   .choice:hover .opt{background:rgba(159,187,212,.10)}
   .choice:hover .opt .dot,.choice:hover .opt .txt{transform:translateX(5px)}
   .choice:hover .opt .dot{border-color:var(--navy-mid)}
-  .choice input:focus-visible + .opt{outline:2px solid var(--gold);outline-offset:-2px}
+  .choice input:focus-visible + .opt{outline:2px solid var(--gold-ink);outline-offset:-2px}
   .choice input:checked + .opt{background:rgba(200,162,74,.10);color:var(--ink)}
   .choice input:checked + .opt .dot,.choice input:checked + .opt .txt{transform:translateX(5px)}
   .choice input:checked + .opt:before{transform:scaleY(1)}
@@ -145,7 +150,7 @@
   .choices-alt .opt:before{background:var(--muted)}
   .choices-alt .choice input:checked + .opt{background:rgba(93,107,128,.10);color:var(--navy)}
   .choices-alt .choice input:checked + .opt .dot{border-color:var(--muted);background:var(--muted)}
-  .results{margin-top:64px;border:1px solid var(--line);background:var(--paper)}.results.locked{opacity:.5}
+  .results{margin-top:64px;border:1px solid var(--line);background:var(--paper)}
   .rhead{background:var(--ink);color:var(--cream);padding:30px}.rhead .eyebrow{color:var(--gold)}
   .rhead h2{font-family:var(--display);font-size:28px;font-weight:600;margin:12px 0 0}.rbody{padding:30px}
   .lockmsg{padding:44px 30px;text-align:center;color:var(--muted);font-size:14.5px}
@@ -160,7 +165,7 @@
   .peyebrow{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:var(--gold)}
   .pattern.indet .peyebrow{color:var(--muted)}
   .pattern h3{font-family:var(--display);font-size:25px;font-weight:600;margin:10px 0 0;line-height:1.15}
-  .pbits{display:flex;gap:7px;margin:14px 0 0}
+  .pbits{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 0}
   .pbit{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:4px 10px;border:1px solid rgba(159,187,212,.45);color:var(--ice)}
   .pbit.on{background:var(--gold);border-color:var(--gold);color:var(--ink)}
   .pattern p{margin:16px 0 0;font-size:14.5px;line-height:1.6;max-width:68ch;color:var(--ice)}
@@ -187,7 +192,13 @@
   .aprow .apa{color:var(--ink);font-weight:600}
   .nextstep{margin-top:34px;padding:24px 26px;border:1px solid var(--line);border-top:3px solid var(--gold);background:var(--cream)}
   .nextstep p{margin:14px 0 0;font-size:14px;color:var(--navy);max-width:66ch}
-  .nextstep .contact{font-weight:700;color:var(--ink)}
+  /* .peyebrow is bright gold, which is correct on the dark pattern block and
+     measures 2.17:1 here on cream — the exact failure fixed everywhere else in
+     change 43, reintroduced by reusing the class on a light ground. */
+  .nextstep .peyebrow{color:var(--gold-ink)}
+  .nextstep .contact{font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+  /* Stack rather than break an email address across two lines. */
+  @media(max-width:560px){.nextstep .contact a{display:block}.nextstep .contact .sep{display:none}}
   .nextstep .contact a{color:var(--gold-ink);text-decoration:underline;text-underline-offset:3px}
   .nextstep .contact a:hover{color:var(--ink)}
   .rsub{font-family:var(--display);font-size:19px;font-weight:600;margin:34px 0 6px}
@@ -228,7 +239,7 @@
   button.act{font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:13px 22px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:all .15s ease}
   button.act:hover{background:var(--ink);color:var(--cream)}
   button.act.primary{background:var(--ink);color:var(--cream)}button.act.primary:hover{background:var(--navy-mid);border-color:var(--navy-mid)}
-  button.act:focus-visible{outline:2px solid var(--gold);outline-offset:3px}.toast{font-size:12.5px;color:var(--muted);align-self:center}
+  button.act:focus-visible{outline:2px solid var(--gold-ink);outline-offset:3px}.toast{font-size:12.5px;color:var(--muted);align-self:center}
   .foot{border-top:1px solid var(--line);margin-top:60px;padding:26px 0 44px;font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
   .foot a{color:var(--muted)}
   /* ---- screen flow ---- */
@@ -274,6 +285,17 @@
   button.big:hover{background:transparent;color:var(--gold)}
   button.big:disabled{background:transparent;border-color:rgba(159,187,212,.4);color:rgba(159,187,212,.5);cursor:not-allowed}
   button.big:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  /* Focus rings. The ring has to contrast with what it sits ON, so bright gold
+     works only against the dark grounds — it measures 2.41:1 on paper and
+     2.17:1 on cream. --gold-ink is the light-ground equivalent, the same split
+     change 43 made for text, and --ink is the one that reads on the gold resume
+     bar. Back and Next carried no rule at all and fell through to Chrome's
+     default dark ring, which against the ink-filled Next button is close to
+     invisible. An instrument that asks an institution how it establishes a
+     vendor's accessibility conformance should answer its own question. */
+  button.next:focus-visible,button.ghost:focus-visible,
+  .rvcomp h5 button:focus-visible{outline:2px solid var(--gold-ink);outline-offset:3px}
+  .resume button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
   .nav{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-top:22px;padding:20px 0 0}
   .nav .hint{font-size:12.5px;color:var(--muted);flex:1;min-width:180px;text-align:center}
   button.ghost{font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:13px 22px;border:1.5px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
@@ -281,7 +303,10 @@
   button.next{font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:13px 26px;border:1.5px solid var(--ink);background:var(--ink);color:var(--cream);cursor:pointer}
   button.next:hover:not(:disabled){background:var(--navy-mid);border-color:var(--navy-mid)}
   button.next:disabled{background:transparent;border-color:var(--line);color:var(--muted);cursor:not-allowed}
-  @media(max-width:760px){.choices-alt .choice{min-width:100%}.rung{grid-template-columns:74px 1fr}.lscore{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}.shead{flex-direction:column;gap:10px}}
+  @media(max-width:760px){.choices-alt .choice{min-width:100%}.rung{grid-template-columns:92px 1fr}.lscore{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}.shead{flex-direction:column;gap:10px}
+    /* "Operate" at 17px needs 66px and the narrow column offered 49, so every
+       rung silently cut its own layer name in half. */
+    .lorder{padding:14px 10px}.lorder b{font-size:14px}}
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
   @media print{
     body{background:#fff;font-size:11pt}.progress,.actions,.howto{display:none}
@@ -303,7 +328,10 @@
     .pbit{border-color:#bbb!important;color:#555!important}.pbit.on{background:#eee!important;color:#000!important}
     .pattern,.nextstep,.focus,.rung{break-inside:avoid}
     .choices{break-inside:auto}.choice{break-inside:avoid}
-    .rhead h2,.fhead h5{color:var(--ink)!important}.results.locked{display:none}
+    .rhead h2,.fhead h5{color:var(--ink)!important}
+    /* Every .eyebrow sits on a ground this block repaints white, and bright
+       gold measures 2.41:1 there — on the PDF that goes to a board. */
+    .eyebrow{color:var(--gold-ink)!important}
   }
 </style>
 </head>
@@ -1308,7 +1336,7 @@ function render() {
     '<p>This assessment names where your floor breaks and in what order to close it. Doing that work is a different exercise: it needs someone to write the definitional standard, draft the tiers, and stand up the review path, with the authority to make them stick.</p>' +
     '<p>Strategies by Design Group works with institutions on exactly this sequence. Bring this result to the conversation.</p>' +
     '<p class="contact"><a href="https://strategiesbydesigngroup.com">StrategiesByDesignGroup.com</a>' +
-    ' · <a href="mailto:judith@strategiesbydesign.com">judith@strategiesbydesign.com</a></p></div>' +
+    '<span class="sep"> · </span><a href="mailto:judith@strategiesbydesign.com">judith@strategiesbydesign.com</a></p></div>' +
     '<div class="actions">' +
     '<button class="act primary" id="printbtn" type="button">Print or save as PDF</button>' +
     '<button class="act" id="copybtn" type="button">Copy summary</button>' +
