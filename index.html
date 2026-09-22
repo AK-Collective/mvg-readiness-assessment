@@ -1159,7 +1159,25 @@ function armToggle(target) {
 // that synthesises a legacy click sequence, and keydown covers Space.
 form.addEventListener('pointerdown', e => armToggle(e.target));
 form.addEventListener('mousedown', e => armToggle(e.target));
-form.addEventListener('keydown', e => { if (e.key === ' ') armToggle(e.target); });
+// Space needs its own path, not arming. Chrome fires NO click when Space
+// re-activates an already-checked radio - only keydown and keyup - so the
+// clear-on-repeat that mouse users get could never reach the keyboard. The
+// arming was happening and nothing ever consumed it. A keyboard-only
+// respondent could change an answer but never take one back, while the
+// instructions told them they could.
+form.addEventListener('keydown', e => {
+  if (e.key !== ' ') return;
+  const input = e.target;
+  if (!input || input.type !== 'radio' || !input.checked) return;
+  e.preventDefault();
+  input.checked = false;
+  delete answers[input.dataset.item];
+  const el = document.getElementById(input.dataset.item + '_item');
+  if (el) el.classList.remove('answered', 'unscored');
+  armedForToggle = null;
+  update();
+  save();
+});
 
 // A label wrapping an input emits TWO click events: one targeting the label,
 // then one the browser forwards to the input. Acting on the first unchecks the
