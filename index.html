@@ -1040,6 +1040,11 @@ function hashFor(n) {
   return COMPONENTS[n].id;
 }
 
+function prefersReducedMotion() {
+  try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  catch (e) { return false; }
+}
+
 function showScreen(next, fromHistory) {
   step = Math.max(-1, Math.min(RESULTS_STEP, next));
   SCREENS.forEach((id, i) => {
@@ -1077,7 +1082,11 @@ function showScreen(next, fromHistory) {
     target.setAttribute('tabindex', '-1');
     try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // A behaviour passed here overrides the CSS scroll-behavior, so the
+  // prefers-reduced-motion block — which kills every transition and animation
+  // with !important — could not reach this one. The people who asked not to be
+  // scrolled were the only ones still being scrolled.
+  window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
 if (typeof window !== 'undefined' && window.addEventListener) {
