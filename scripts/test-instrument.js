@@ -899,6 +899,18 @@ t('COPY BUDGET · no report block narrates the mechanism', () => {
   return hits.length === 0 || 'mechanism narration returned: "' + hits.join('", "') + '"';
 });
 
+t('COPY · the rendered report carries no unfilled placeholder', () => {
+  // The contact line shipped as "[SBD: contact line, booking link or email goes
+  // here]" and sat on every result produced. Nothing errored, nothing rendered
+  // wrong, and no test looked. A bracketed placeholder is the one kind of copy
+  // defect that is trivial to detect and embarrassing to ship.
+  const text = renderedReport().replace(/<[^>]*>/g, ' ');
+  const bracketed = text.match(/\[[^\]]{4,}\]/g) || [];
+  const marked = /\bTODO\b|\bTBD\b|Lorem ipsum|goes here/i.test(text) ? ['TODO/TBD/goes here'] : [];
+  const hits = bracketed.concat(marked);
+  return hits.length === 0 || 'placeholder still in the report: ' + hits.join(', ');
+});
+
 t('COPY BUDGET · the Don\'t know flag only appears when the count is a finding', () => {
   setAll((c, item, ci, ii) => (ci === 0 && ii === 0) ? DK : val(2));
   app.render();
