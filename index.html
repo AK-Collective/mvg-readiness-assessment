@@ -1013,7 +1013,10 @@ function screenTitle(n) {
   if (n === REVIEW_STEP) return 'Review your answers';
   if (n === RESULTS_STEP) return 'Your governance floor';
   const c = COMPONENTS[n];
-  return 'Component ' + c.num + ' of 5, ' + c.name;
+  // Sequence position, not the framework number: COMPONENTS[2] is 05, so this
+  // announced "Component 05 of 5" on the third screen. The rail and the
+  // heading both say Section N, so the live region says the same thing.
+  return 'Section ' + (n + 1) + ' of ' + COMPONENTS.length + ', ' + c.name;
 }
 
 function hashFor(n) {
