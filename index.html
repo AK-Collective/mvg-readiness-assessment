@@ -31,7 +31,11 @@
   .skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:var(--cream);
     padding:12px 20px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
   .skip:focus{left:0}
-  .resume{background:var(--gold);color:var(--ink);border-bottom:1px solid rgba(10,24,48,.25)}
+  /* Sticky, because this bar is the only thing telling a returning respondent
+     their 20 minutes of work is still there. Static, it sits above the
+     masthead and scrolls away the moment the reader moves down the intro. */
+  .resume{background:var(--gold);color:var(--ink);border-bottom:1px solid rgba(10,24,48,.25);
+    position:sticky;top:0;z-index:30}
   .resume-inner{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding-top:11px;padding-bottom:11px;font-size:13.5px;font-weight:600}
   .resume button{font-family:var(--body);font-size:11px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;
     padding:8px 15px;border:1.5px solid var(--ink);background:var(--ink);color:var(--cream);cursor:pointer}
@@ -982,6 +986,13 @@ function screenTitle(n) {
   return 'Component ' + c.num + ' of 5, ' + c.name;
 }
 
+function hashFor(n) {
+  if (n < 0) return 'start';
+  if (n === REVIEW_STEP) return 'review';
+  if (n > REVIEW_STEP) return 'result';
+  return COMPONENTS[n].id;
+}
+
 function showScreen(next, fromHistory) {
   step = Math.max(-1, Math.min(RESULTS_STEP, next));
   SCREENS.forEach((id, i) => {
@@ -1003,7 +1014,7 @@ function showScreen(next, fromHistory) {
   // Browser Back is what people reach for on a multi-screen flow. Without this
   // it leaves the app and takes every answer with it.
   if (!fromHistory && typeof history !== 'undefined' && history.pushState) {
-    history.pushState({ step: step }, '', '#' + (step < 0 ? 'start' : step >= REVIEW_STEP ? (step === REVIEW_STEP ? 'review' : 'result') : COMPONENTS[step].id));
+    history.pushState({ step: step }, '', '#' + hashFor(step));
   }
   // A screen reader gets no signal from a class toggle. Say what changed.
   const ann = document.getElementById('announce');
@@ -1047,7 +1058,16 @@ document.getElementById('startbtn').addEventListener('click', () => {
 document.addEventListener('click', event => {
   const btn = event.target.closest('[data-go]');
   if (!btn || btn.disabled) return;
-  showScreen(Number(btn.dataset.go));
+  const target = Number(btn.dataset.go);
+  // Stepping back one screen is the browser's Back, not a new destination.
+  // Pushing an entry here made the app's own Back button GROW the history
+  // stack, so afterwards the browser's Back walked a trail of #c01 #c02 #c01
+  // that nobody had navigated. Guarded on the current entry being one we wrote
+  // and agreeing with where we are: otherwise history.back() leaves the
+  // assessment entirely, which is the one outcome worse than a messy stack.
+  const ours = typeof history !== 'undefined' && history.state && history.state.step === step;
+  if (target === step - 1 && ours && history.back) { history.back(); return; }
+  showScreen(target);
 });
 
 function renderReview() {
@@ -1357,6 +1377,22 @@ function todayStamp() {
   }
 }
 
+// The browser restores the previous scroll offset on reload. Mid-assessment
+// that drops the reader partway down the INTRO screen, with the "assessment in
+// progress" bar scrolled off the top — so a refresh looks exactly like losing
+// the lot. The bar is sticky now as well; this is the other half.
+if (typeof history !== 'undefined' && 'scrollRestoration' in history) {
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
+}
+
+// After a reload the address bar and the current history entry still name the
+// screen the respondent was on, while the page is showing the intro. Make the
+// entry say what is actually on screen, or the first Back press drops them into
+// a section they never asked for.
+if (typeof history !== 'undefined' && history.replaceState) {
+  try { history.replaceState({ step: -1 }, '', '#start'); } catch (e) {}
+}
+
 function paintDate() {
   const f = document.getElementById('f-date');
   const label = document.getElementById('datestamp');
@@ -1372,6 +1408,9 @@ function savedInstitution() {
 
 const saved = restore();
 paintDate();   // a resumed record keeps the day it was started
+if (typeof window !== 'undefined' && window.scrollTo) {
+  try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) { window.scrollTo(0, 0); }
+}
 if (saved) {
   const bar = document.getElementById('resume');
   bar.hidden = false;
@@ -1388,7 +1427,17 @@ if (saved) {
     finished ? 'Start a new one' : 'Start again';
   document.getElementById('resumebtn').addEventListener('click', () => {
     bar.hidden = true;
-    showScreen(Math.min(saved.step, RESULTS_STEP));
+    const target = Math.min(saved.step, RESULTS_STEP);
+    // Seed the stack with the screens this respondent already worked through.
+    // Without it, Back from a resumed section 3 exits to the intro, because in
+    // THIS browsing session they never visited sections 1 and 2 — technically
+    // correct and, to someone who answered those questions yesterday, wrong.
+    if (typeof history !== 'undefined' && history.pushState) {
+      for (let i = 0; i < target; i++) {
+        try { history.pushState({ step: i }, '', '#' + hashFor(i)); } catch (e) {}
+      }
+    }
+    showScreen(target);
   });
   document.getElementById('freshbtn').addEventListener('click', () => {
     bar.hidden = true;
